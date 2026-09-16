@@ -1,0 +1,1664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE HUDDLE</title>
+<meta name="description" content="Find the people near you who have what you need, and who need what you have.">
+<style>
+:root{
+  --paper:#ECEBE6;
+  --paper-2:#DEDCD3;
+  --receipt:#FAFAF6;
+  --ink:#000;
+  --grey:#55544F;
+  --red:#D5001C;
+  --sans:"Helvetica Neue",Helvetica,Arial,"Nimbus Sans","Liberation Sans",sans-serif;
+  --mono:"Courier New",Courier,"Nimbus Mono PS","Liberation Mono",monospace;
+  --s1:.8125rem; --s2:1rem; --s3:1.25rem; --s4:1.75rem;
+  --s5:clamp(2rem,4.6vw,3.25rem);
+  --s6:clamp(2.7rem,7.4vw,5.75rem);
+  --pad:clamp(1.25rem,4vw,3.5rem);
+  --top-h:64px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:var(--top-h)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.45;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.09;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.1 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+h1,h2,h3{font-weight:900;letter-spacing:-.03em;line-height:1;margin:0}
+p{margin:0 0 1rem}
+a{color:inherit}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:0;background:#000;color:var(--paper);padding:.5rem 1rem;z-index:300}
+.skip:focus{left:1rem}
+
+/* ---------- buttons ---------- */
+.btn{font:inherit;font-weight:700;font-size:var(--s2);line-height:1.1;padding:.75rem 1.15rem;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;border-radius:0;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn--red{background:var(--red);border-color:var(--red);color:#fff}
+.btn--red:hover{background:var(--ink);border-color:var(--ink)}
+.btn--ink{background:var(--ink);color:var(--paper)}
+.btn--ink:hover{background:var(--red);border-color:var(--red);color:#fff}
+.btn--sm{font-size:var(--s1);padding:.45rem .7rem;border-width:1.5px}
+.btn[disabled]{opacity:.45;cursor:default;background:transparent;color:var(--ink)}
+.textlink{font:inherit;font-weight:700;background:none;border:0;padding:.25rem 0;color:var(--ink);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;cursor:pointer}
+.textlink:hover{color:var(--red)}
+
+/* ---------- header + transit line nav ---------- */
+.top{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:3px solid var(--ink);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1rem 1.5rem;padding:.55rem var(--pad)}
+.brand{display:flex;align-items:center;gap:.55rem;color:var(--ink);text-decoration:none;font-weight:900;letter-spacing:-.02em;font-size:1.15rem;white-space:nowrap}
+.brand svg{width:30px;height:30px;flex:none}
+.line{min-width:0}
+.line ol{list-style:none;margin:0;padding:0;display:flex;justify-content:center;position:relative}
+.line ol::before{content:"";position:absolute;left:2rem;right:2rem;top:8px;height:5px;background:var(--ink)}
+.line li{position:relative}
+.line button{background:none;border:0;font:inherit;font-size:var(--s1);font-weight:700;padding:0 .8rem;display:flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer;color:var(--ink);white-space:nowrap}
+.line button::before{content:"";width:16px;height:16px;border:3.5px solid var(--ink);background:var(--paper);border-radius:50%;box-sizing:border-box;position:relative}
+.line button:hover::before{background:var(--ink)}
+.line button[aria-current="true"]::before{background:var(--red);border-color:var(--red);box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--red)}
+.meta-top{display:flex;align-items:center;gap:1.25rem;justify-content:flex-end}
+.northstar{margin:0;display:flex;align-items:baseline;gap:.4rem;font-size:var(--s1);line-height:1.1}
+.northstar strong{font-size:1.6rem;font-weight:900;letter-spacing:-.03em;color:var(--red)}
+.northstar small{display:block;color:var(--grey);font-size:.72rem}
+.switch{display:flex;align-items:center;gap:.5rem;font-size:var(--s1);font-weight:700;cursor:pointer;white-space:nowrap}
+.switch input{appearance:none;-webkit-appearance:none;width:38px;height:22px;border:2px solid var(--ink);background:var(--paper);position:relative;cursor:pointer;margin:0;flex:none}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;background:var(--ink);transition:transform .15s}
+.switch input:checked{background:var(--red);border-color:var(--red)}
+.switch input:checked::after{transform:translateX(16px);background:#fff}
+@media (max-width:980px){
+  .top{grid-template-columns:1fr auto}
+  .line{grid-column:1/-1;order:3;overflow-x:auto;margin:0 calc(-1 * var(--pad));padding:.45rem var(--pad) .3rem;scrollbar-width:none}
+  .line::-webkit-scrollbar{display:none}
+  .line ol{justify-content:flex-start;min-width:max-content}
+  .line ol::before{left:1.5rem;right:1.5rem}
+}
+.switch .short{display:none}
+@media (max-width:560px){
+  .top{column-gap:.75rem}
+  .meta-top{gap:.6rem}
+  .northstar small{display:none}
+  .northstar strong{font-size:1.25rem}
+  .northstar span{font-size:.72rem;max-width:4.2em}
+  .switch{gap:.35rem;font-size:.72rem}
+  .switch .long{display:none}
+  .switch .short{display:inline}
+  .brand{gap:.4rem;font-size:1rem}
+  .brand svg{width:26px;height:26px}
+  .seg{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:2px;background:var(--ink)}
+  .seg button{background:var(--paper)}
+  .seg button+button{border-left:0}
+  .map .lbl{font-size:4.2px;stroke-width:1.4px}
+}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:calc(100vh - var(--top-h));min-height:calc(100svh - var(--top-h));display:grid;align-items:end;overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-copy{position:relative;padding:var(--pad);padding-bottom:clamp(2rem,6vw,4.5rem);max-width:50rem}
+.hero h1{font-size:var(--s6);line-height:.92;letter-spacing:-.045em;margin:0 0 1.5rem;max-width:12ch}
+.hero .lede{font-size:var(--s3);line-height:1.35;max-width:32rem;margin:0 0 1.75rem}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.actions .textlink{margin-left:.5rem}
+
+/* ---------- archive (only renders with real sourced photos) ---------- */
+.archive{border-top:3px solid var(--ink);padding:var(--pad);display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1.25rem}
+.archive figure{margin:0}
+.archive img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:grayscale(1) contrast(1.1);display:block;background:var(--paper-2)}
+.archive figcaption{font-size:.75rem;margin-top:.35rem;color:var(--grey)}
+
+/* ---------- histories ---------- */
+.histories{border-top:3px solid var(--ink);padding:clamp(3rem,8vw,6rem) var(--pad)}
+.sec-head{max-width:44rem;margin-bottom:3rem}
+.sec-head h2{font-size:var(--s5);margin-bottom:1.25rem}
+.sec-head p{font-size:var(--s3);line-height:1.35}
+.lanes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3rem 2rem}
+@media (max-width:1060px){.lanes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.lanes{grid-template-columns:1fr}}
+.lane h3{font-size:var(--s3);letter-spacing:-.02em;margin-bottom:1.1rem;min-height:2.5em;display:flex;align-items:flex-end}
+.lane ol{list-style:none;margin:0 0 0 6px;padding:0 0 0 1.35rem;border-left:5px solid var(--ink)}
+.lane li{position:relative;padding:0 0 1.05rem;font-size:.9375rem;line-height:1.35}
+.lane li:last-child{padding-bottom:0}
+.lane li::before{content:"";position:absolute;left:calc(-1.35rem - 10.5px);top:.1rem;width:16px;height:16px;border-radius:50%;background:var(--paper);border:3.5px solid var(--ink);box-sizing:border-box}
+.lane .yr{display:block;font-weight:800}
+.lane li.now::before{background:var(--red);border-color:var(--red)}
+.lane li.now .yr{color:var(--red)}
+.fineprint{font-size:var(--s1);color:var(--grey);max-width:42rem;margin-top:3rem}
+
+/* ---------- story ---------- */
+.story{position:relative;border-top:3px solid var(--ink)}
+.stage{position:sticky;top:var(--top-h);height:calc(100vh - var(--top-h));height:calc(100svh - var(--top-h));overflow:hidden}
+.stage canvas{width:100%;height:100%;display:block}
+.stage-note{position:absolute;right:var(--pad);bottom:.9rem;margin:0;font-size:.72rem;color:var(--grey)}
+.steps{position:relative;margin-top:calc(-100vh + var(--top-h));margin-top:calc(-100svh + var(--top-h))}
+.step{min-height:calc(100vh - var(--top-h));min-height:calc(100svh - var(--top-h));display:flex;align-items:center;padding:3rem var(--pad);pointer-events:none}
+.flyer{pointer-events:auto;width:100%;max-width:26rem;background:var(--paper-2);padding:1.75rem 1.6rem 1.6rem;position:relative;transform:rotate(var(--r,0deg))}
+.flyer::before{content:"";position:absolute;top:-11px;left:50%;width:88px;height:22px;margin-left:-44px;background:rgba(255,255,255,.6);transform:rotate(-2.5deg)}
+.flyer h2{font-size:clamp(1.85rem,3.4vw,2.6rem);margin-bottom:1rem}
+.flyer p{font-size:1.0625rem;line-height:1.4}
+.flyer p:last-child{margin-bottom:0}
+.flyer .big{font-weight:900;font-size:1.35rem;letter-spacing:-.02em;line-height:1.15}
+.flyer--final h2{font-size:clamp(2.1rem,4.2vw,3.2rem)}
+.key{list-style:none;margin:1rem 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.35rem .75rem;font-size:var(--s1);font-weight:700}
+.key li{display:flex;align-items:center;gap:.4rem}
+.key i,.sw{display:inline-block;width:.8rem;height:.8rem;background:var(--c);flex:none}
+@media (max-width:899px){
+  .step{align-items:flex-end;padding-bottom:1.25rem}
+  .flyer{max-width:none;padding:1.4rem 1.25rem 1.25rem}
+  .flyer h2{font-size:1.75rem}
+  .stage-note{top:.7rem;bottom:auto}
+}
+
+/* ---------- app ---------- */
+.app{border-top:3px solid var(--ink);padding:clamp(2.25rem,5vw,4rem) var(--pad) 6rem;min-height:100vh}
+.panel-head{display:flex;flex-wrap:wrap;gap:1rem 1.5rem;align-items:flex-end;justify-content:space-between;margin-bottom:1.75rem}
+.panel-head h2{font-size:var(--s5)}
+.panel-head p{margin:.6rem 0 0;max-width:40rem;color:var(--grey)}
+.stamp{display:inline-block;border:2.5px solid var(--red);color:var(--red);font-weight:800;font-size:var(--s1);padding:.2rem .5rem;transform:rotate(-2deg);white-space:nowrap}
+.no-sim .stamp{display:none}
+.toolbar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:1.25rem}
+.select{font:inherit;font-weight:700;font-size:var(--s1);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:.5rem 2rem .5rem .6rem;border-radius:0;appearance:none;-webkit-appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,#000 50%),linear-gradient(135deg,#000 50%,transparent 50%);background-position:calc(100% - 14px) 55%,calc(100% - 9px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{font:inherit;font-size:var(--s1);font-weight:700;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:.3rem .6rem .3rem .45rem;display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;line-height:1.2}
+.chip i{width:.75rem;height:.75rem;background:var(--c);display:inline-block;outline:1px solid rgba(0,0,0,.2)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg{display:inline-flex;border:2px solid var(--ink)}
+.seg button{font:inherit;font-size:var(--s1);font-weight:700;background:none;border:0;padding:.45rem .75rem;cursor:pointer;color:var(--ink)}
+.seg button+button{border-left:2px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.empty{border:2px dashed var(--ink);padding:1.5rem;max-width:40rem}
+.empty p{margin:0 0 1rem;font-size:var(--s3);line-height:1.3;font-weight:700}
+
+/* near me */
+.near{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:2rem 2.5rem;align-items:start}
+@media (max-width:900px){.near{grid-template-columns:1fr}}
+.map-box{border:3px solid var(--ink)}
+.map-ctl{display:flex;flex-wrap:wrap;gap:.6rem;padding:.7rem;border-bottom:3px solid var(--ink);align-items:center}
+.map-ctl .chips{width:100%}
+.map{display:block;width:100%;height:auto;max-height:80vh}
+.map .adj{stroke:#000;stroke-width:.28;stroke-dasharray:1 .9;opacity:.35}
+.map .link{stroke:var(--red);stroke-linecap:round;opacity:.85}
+.map .lbl{font-family:var(--sans);font-size:3.1px;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:var(--paper);stroke-width:1.1px;stroke-linejoin:round;fill:#000;pointer-events:none}
+.map .lbl.sel{fill:var(--red)}
+.map .hit{fill:transparent;cursor:pointer}
+.map .hit:focus{outline:none}
+.map .hit:focus-visible{stroke:var(--red);stroke-width:.6}
+.map-foot{margin:0;padding:.55rem .7rem;border-top:1.5px solid var(--ink);font-size:.75rem;color:var(--grey);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.hood-panel h3{font-size:var(--s4);margin-bottom:.4rem}
+.hood-panel .sub{color:var(--grey);margin-bottom:1rem}
+.cat-table{width:100%;border-collapse:collapse;font-size:.9375rem;margin-bottom:1.25rem}
+.cat-table th{text-align:left;font-size:var(--s1);font-weight:700;color:var(--grey);padding:0 .4rem .4rem 0;border-bottom:3px solid var(--ink)}
+.cat-table td{padding:.5rem .4rem .5rem 0;border-bottom:1.5px solid var(--ink);vertical-align:middle}
+.cat-table td.n{font-weight:800;white-space:nowrap}
+.cat-table td.name{display:flex;align-items:center;gap:.5rem}
+.totals{margin-top:2.75rem;border-top:3px solid var(--ink);padding-top:1.5rem}
+.totals h3{font-size:var(--s5);max-width:16ch;margin-bottom:.6rem}
+.totals .after{font-size:var(--s3);font-weight:700;margin-bottom:1.5rem}
+.totals ul{list-style:none;margin:0;padding:0;columns:2 16rem;column-gap:2.5rem}
+.totals li{break-inside:avoid;display:flex;align-items:baseline;gap:.6rem;padding:.35rem 0;border-bottom:1.5px solid var(--ink)}
+.totals li strong{font-size:1.4rem;font-weight:900;letter-spacing:-.02em;min-width:3.2ch}
+.totals .fineprint{margin-top:1rem}
+
+/* posts */
+.posts{list-style:none;margin:0;padding:0;border-top:3px solid var(--ink)}
+.post{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:0 1rem;padding:1rem 0;border-bottom:1.5px solid var(--ink);align-items:start}
+.post .paint{align-self:stretch;background:var(--c);min-height:2.5rem}
+.post .txt{font-size:var(--s3);font-weight:700;line-height:1.2;margin:0 0 .4rem;letter-spacing:-.01em;overflow-wrap:anywhere}
+.post .meta{font-size:var(--s1);color:var(--grey);margin:0;display:flex;flex-wrap:wrap;gap:.15rem 1rem}
+.post .who{font-size:var(--s1);margin:.3rem 0 0}
+.post .acts{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.yours{color:var(--red);font-weight:800}
+@media (max-width:620px){
+  .post{grid-template-columns:8px minmax(0,1fr)}
+  .post .acts{grid-column:2;justify-content:flex-start;margin-top:.7rem}
+}
+details.more{position:relative}
+details.more summary{list-style:none;cursor:pointer;font-size:var(--s1);font-weight:700;border:1.5px solid var(--ink);padding:.45rem .6rem;line-height:1.1}
+details.more summary::-webkit-details-marker{display:none}
+details.more[open] summary{background:var(--ink);color:var(--paper)}
+details.more .menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--paper);border:2px solid var(--ink);z-index:20;display:flex;flex-direction:column;min-width:10rem}
+details.more .menu button{font:inherit;font-size:var(--s1);font-weight:700;text-align:left;background:none;border:0;padding:.6rem .75rem;cursor:pointer;color:var(--ink)}
+details.more .menu button+button{border-top:1.5px solid var(--ink)}
+details.more .menu button:hover{background:var(--ink);color:var(--paper)}
+@media (max-width:620px){details.more .menu{right:auto;left:0}}
+.boxed{border:3px solid var(--ink);padding:1.25rem;margin:0 0 2rem;background:var(--paper-2)}
+.boxed h3{font-size:var(--s4);margin-bottom:.5rem}
+.boxed .sub{color:var(--grey);margin-bottom:1rem}
+.boxed .posts{border-top-width:2px}
+.boxed-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}
+.status{font-size:var(--s1);font-weight:800}
+.status.yes{color:var(--red)}
+.more-row{margin-top:1.25rem}
+
+/* huddles */
+.hl{list-style:none;margin:0 0 3rem;padding:0;border-top:3px solid var(--ink)}
+.hl li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.25rem 1.1rem;align-items:center;padding:1rem 0;border-bottom:1.5px solid var(--ink)}
+.hl .mark{width:46px;height:46px}
+.hl h3{font-size:var(--s3);letter-spacing:-.02em;margin-bottom:.25rem}
+.hl p{margin:0;font-size:var(--s1);color:var(--grey)}
+.hl .acts{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:620px){.hl li{grid-template-columns:auto minmax(0,1fr)}.hl .acts{grid-column:2;justify-content:flex-start;margin-top:.5rem}}
+.sub-h{font-size:var(--s4);margin:0 0 1rem}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:1.75rem 1.25rem;margin:1.5rem 0 2rem}
+.note{background:var(--paper-2);padding:1.4rem 1.1rem 1rem;position:relative;transform:rotate(var(--r,0deg))}
+.note::before{content:"";position:absolute;top:.45rem;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--red);box-shadow:1px 2px 0 rgba(0,0,0,.25)}
+.note p{margin:0 0 .6rem;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.note small{color:var(--grey);display:flex;justify-content:space-between;gap:.5rem;align-items:center}
+.note .textlink{font-size:.72rem}
+.pin-form{max-width:36rem}
+
+/* projects */
+.project{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:2rem 3rem;align-items:start}
+@media (max-width:900px){.project{grid-template-columns:1fr}}
+.van{width:100%;height:auto;display:block}
+.progress{height:22px;border:3px solid var(--ink);margin:1rem 0 .6rem;position:relative}
+.progress span{position:absolute;inset:0 auto 0 0;background:var(--red)}
+.raised{font-size:var(--s4);font-weight:900;letter-spacing:-.03em;margin:0}
+.roles{list-style:none;margin:0 0 2rem;padding:0;border-top:3px solid var(--ink)}
+.roles li{display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:.7rem 0;border-bottom:1.5px solid var(--ink)}
+.roles .filled{color:var(--grey);font-size:var(--s1);font-weight:700}
+.pledge{display:flex;gap:.5rem;flex-wrap:wrap;align-items:stretch;margin:.5rem 0 .5rem}
+.pledge input{font:inherit;font-weight:700;width:8rem;border:2px solid var(--ink);background:var(--paper);padding:.55rem .6rem;border-radius:0}
+.log{list-style:none;padding:0;margin:0}
+.log li{padding:.55rem 0;border-bottom:1.5px dashed var(--ink);font-size:.9375rem}
+.log time{font-weight:800;margin-right:.5rem}
+
+/* pools */
+.pools{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:2.5rem 2rem;align-items:start}
+.pool h3{font-size:var(--s4);margin-bottom:.4rem}
+.pool .sub{color:var(--grey);font-size:.9375rem;margin-bottom:1rem}
+.receipt{background:var(--receipt);font-family:var(--mono);font-size:.84rem;line-height:1.45;padding:1.25rem 1.1rem 1.1rem;position:relative;margin-bottom:1.75rem;box-shadow:0 1px 0 rgba(0,0,0,.15)}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:linear-gradient(-45deg,transparent 5.6px,var(--receipt) 0) 0 0/10px 8px repeat-x,linear-gradient(45deg,transparent 5.6px,var(--receipt) 0) 0 0/10px 8px repeat-x}
+.receipt .rh{text-align:center;font-weight:700;margin-bottom:.5rem}
+.receipt .rl{display:flex;justify-content:space-between;gap:1rem}
+.receipt .rl span:last-child{white-space:nowrap}
+.receipt .rl.mine{color:var(--red);font-weight:700}
+.receipt hr{border:0;border-top:1.5px dashed #000;margin:.55rem 0}
+.receipt .tot{font-weight:700;font-size:.95rem}
+.receipt .fine{margin-top:.6rem;font-size:.75rem;text-align:center}
+
+/* footer */
+.foot{border-top:3px solid var(--ink);padding:3rem var(--pad) 4rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem 3rem;font-size:.9375rem}
+@media (max-width:900px){.foot{grid-template-columns:1fr}}
+.foot h2{font-size:var(--s3);letter-spacing:-.02em;margin-bottom:.75rem}
+.foot ul{margin:0;padding-left:1.1rem}
+.foot li{margin-bottom:.35rem}
+
+/* dialogs */
+dialog{border:3px solid var(--ink);background:var(--paper);color:var(--ink);padding:0;width:min(38rem,calc(100vw - 1.5rem));max-height:calc(100vh - 2rem);border-radius:0}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dlg{padding:1.5rem}
+.dlg h2{font-size:var(--s4);margin-bottom:.6rem}
+.dlg .sub{color:var(--grey);margin-bottom:1.25rem}
+.field{margin:0 0 1.15rem;border:0;padding:0;min-width:0}
+.field>label,.field legend{display:block;font-weight:800;margin-bottom:.4rem;padding:0}
+.field input[type=text],.field textarea,.field select{width:100%;font:inherit;border:2px solid var(--ink);background:#fff;color:var(--ink);padding:.6rem;border-radius:0}
+.field textarea{min-height:5.5rem;resize:vertical}
+.hint{font-size:var(--s1);color:var(--grey);margin:.35rem 0 0}
+.opts{display:flex;flex-wrap:wrap;gap:.4rem}
+.opts label{position:relative;cursor:pointer}
+.opts input{position:absolute;opacity:0;width:1px;height:1px}
+.opts span{display:inline-flex;align-items:center;gap:.4rem;font-size:var(--s1);font-weight:700;border:1.5px solid var(--ink);padding:.4rem .65rem .4rem .5rem;line-height:1.2}
+.opts span i{width:.75rem;height:.75rem;background:var(--c);display:inline-block;outline:1px solid rgba(0,0,0,.2)}
+.opts input:checked+span{background:var(--ink);color:var(--paper)}
+.opts input:focus-visible+span{outline:3px solid var(--red);outline-offset:2px}
+.opts--grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr))}
+.check{display:flex;gap:.55rem;align-items:flex-start;font-size:.9375rem;cursor:pointer}
+.check input{width:18px;height:18px;margin:.15rem 0 0;accent-color:var(--red);flex:none}
+.dlg-foot{display:flex;justify-content:flex-end;gap:.6rem;flex-wrap:wrap;margin-top:1.5rem;padding-top:1rem;border-top:1.5px solid var(--ink)}
+.err{color:var(--red);font-weight:700;font-size:var(--s1);margin:.35rem 0 0}
+.promise{border-left:5px solid var(--red);padding:.2rem 0 .2rem .9rem;margin:0 0 1.25rem;font-size:.9375rem}
+
+/* toasts */
+.toasts{position:fixed;left:50%;bottom:1rem;transform:translateX(-50%);z-index:250;display:flex;flex-direction:column;gap:.5rem;width:min(32rem,calc(100vw - 1.5rem));pointer-events:none}
+.toast{pointer-events:auto;background:var(--ink);color:var(--paper);padding:.8rem 1rem;font-weight:700;font-size:.9375rem;display:flex;justify-content:space-between;gap:1rem;align-items:center;border-left:6px solid var(--red)}
+.toast button{font:inherit;font-size:var(--s1);font-weight:800;color:var(--paper);background:none;border:1.5px solid var(--paper);padding:.3rem .6rem;cursor:pointer;flex:none}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#app">Skip to the app</a>
+
+<header class="top" id="top-bar">
+  <a class="brand" href="#top" aria-label="THE HUDDLE, back to the top">
+    <svg viewBox="0 0 30 30" aria-hidden="true"><g fill="#000"><circle cx="23.6" cy="15" r="3.9"/><circle cx="19.3" cy="22.4" r="3.9"/><circle cx="10.7" cy="22.4" r="3.9"/><circle cx="6.4" cy="15" r="3.9"/><circle cx="10.7" cy="7.6" r="3.9"/><circle cx="19.3" cy="7.6" r="3.9"/></g><circle cx="15" cy="15" r="3.9" fill="#D5001C"/></svg>
+    <span>THE HUDDLE</span>
+  </a>
+  <nav class="line" aria-label="App sections">
+    <ol>
+      <li><button type="button" data-act="tab" data-tab="near">Near me</button></li>
+      <li><button type="button" data-act="tab" data-tab="needs">Needs</button></li>
+      <li><button type="button" data-act="tab" data-tab="offers">Offers</button></li>
+      <li><button type="button" data-act="tab" data-tab="huddles">Huddles</button></li>
+      <li><button type="button" data-act="tab" data-tab="projects">Projects</button></li>
+      <li><button type="button" data-act="tab" data-tab="pools">Pools</button></li>
+    </ol>
+  </nav>
+  <div class="meta-top">
+    <p class="northstar" id="northstar"></p>
+    <label class="switch"><input type="checkbox" id="sim-toggle" checked><span class="long">Simulated neighbors</span><span class="short">Simulated</span></label>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="top" aria-labelledby="hero-h">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-copy" id="hero-copy">
+      <h1 id="hero-h">You have more neighbors than you think.</h1>
+      <p class="lede">THE HUDDLE matches what people near you need with what people near you already have. It never asks your race, never shows follower counts, and keeps your address hidden.</p>
+      <div class="actions">
+        <button type="button" class="btn btn--red" data-act="need">I need something</button>
+        <button type="button" class="btn" data-act="offer">I have something</button>
+        <a class="textlink" href="#histories">Read the story first</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="archive" id="archive" hidden aria-label="Documentary photographs"></section>
+
+  <section class="histories" id="histories" aria-labelledby="hist-h">
+    <div class="sec-head">
+      <h2 id="hist-h">We are not the same.</h2>
+      <p>Different communities got here by different roads. Solidarity doesn't require pretending those roads were identical, and nobody here is scoring who had it worse.</p>
+    </div>
+    <div class="lanes">
+      <div class="lane"><h3>Black communities</h3><ol>
+        <li><span class="yr">1619</span>Enslaved Africans are brought to the English colony of Virginia.</li>
+        <li><span class="yr">1877–1965</span>Jim Crow laws enforce segregation across the South.</li>
+        <li><span class="yr">1930s</span>Federal HOLC maps grade Black neighborhoods "hazardous," steering lending away for decades.</li>
+        <li class="now"><span class="yr">Now</span>Homeownership and wealth gaps that trace back to who was allowed to buy where.</li>
+      </ol></div>
+      <div class="lane"><h3>Native communities</h3><ol>
+        <li><span class="yr">1830</span>The Indian Removal Act forces nations off homelands east of the Mississippi.</li>
+        <li><span class="yr">1855</span>The Treaty of Point Elliott takes Duwamish and Suquamish land, including what is now Seattle.</li>
+        <li><span class="yr">1879 on</span>Federal boarding schools separate children from their families and languages.</li>
+        <li class="now"><span class="yr">Now</span>Nations still in court over treaty rights to land, water, and fishing.</li>
+      </ol></div>
+      <div class="lane"><h3>Latino and Hispanic communities</h3><ol>
+        <li><span class="yr">1848</span>The Treaty of Guadalupe Hidalgo moves the border over families already living in the Southwest.</li>
+        <li><span class="yr">1930s</span>Deportation drives expel Mexican Americans, U.S. citizens among them.</li>
+        <li><span class="yr">1942–1964</span>The Bracero Program brings Mexican farmworkers on contracts with few protections.</li>
+        <li class="now"><span class="yr">Now</span>Citizenship, language, and regional histories that differ widely inside one label.</li>
+      </ol></div>
+      <div class="lane"><h3>Asian communities</h3><ol>
+        <li><span class="yr">1882</span>The Chinese Exclusion Act bars Chinese laborers from entering the country.</li>
+        <li><span class="yr">1886</span>White mobs force most of Seattle's Chinese residents out of the city.</li>
+        <li><span class="yr">1942</span>Executive Order 9066 leads to the incarceration of about 120,000 Japanese Americans.</li>
+        <li class="now"><span class="yr">Now</span>Some of the widest income gaps of any U.S. group, hidden inside one label.</li>
+      </ol></div>
+      <div class="lane"><h3>Pacific Islander communities</h3><ol>
+        <li><span class="yr">1893</span>U.S.-backed businessmen overthrow the Hawaiian Kingdom.</li>
+        <li><span class="yr">1898</span>The U.S. takes Guam after the Spanish-American War.</li>
+        <li><span class="yr">1946–1958</span>The U.S. conducts 67 nuclear tests in the Marshall Islands.</li>
+        <li class="now"><span class="yr">Now</span>Marshallese and Micronesian families building lives in U.S. towns, far from islands shaped by U.S. policy.</li>
+      </ol></div>
+      <div class="lane"><h3>White working-class communities</h3><ol>
+        <li><span class="yr">1930s</span>The Dust Bowl and the Depression push farm families west as migrant labor.</li>
+        <li><span class="yr">1969–1971</span>The Boeing Bust wipes out tens of thousands of Seattle-area jobs.</li>
+        <li><span class="yr">1970s–80s</span>Steel and auto plants close across the Rust Belt.</li>
+        <li class="now"><span class="yr">Now</span>Opioid deaths, rural hospital closures, and towns built around jobs that left.</li>
+      </ol></div>
+      <div class="lane"><h3>Immigrant communities</h3><ol>
+        <li><span class="yr">1924</span>The Immigration Act sets national-origin quotas favoring northern Europe.</li>
+        <li><span class="yr">1975 on</span>Refugees from Southeast Asia, then East Africa and elsewhere, resettle in places like Seattle.</li>
+        <li><span class="yr">1996</span>New federal laws expand deportation and cut benefits for many legal immigrants.</li>
+        <li class="now"><span class="yr">Now</span>Workers whose legal status can decide their wages, their housing, and whether they call for help.</li>
+      </ol></div>
+      <div class="lane"><h3>Mixed families</h3><ol>
+        <li><span class="yr">1662</span>A Virginia law makes a child's enslavement follow the mother's status.</li>
+        <li><span class="yr">1924</span>Virginia's Racial Integrity Act writes a "one drop" rule into law.</li>
+        <li><span class="yr">1967</span>Loving v. Virginia strikes down bans on interracial marriage.</li>
+        <li class="now"><span class="yr">Now</span>Counted in more than one box only since the 2000 census, and still often asked to pick one.</li>
+      </ol></div>
+    </div>
+    <p class="fineprint">Short paths, not full histories. Every date is a starting point for reading, and the sources at the bottom of the page are good places to start.</p>
+  </section>
+
+  <section class="story" id="story" aria-label="How the pressure connects">
+    <div class="stage">
+      <canvas id="story-canvas" aria-hidden="true"></canvas>
+      <p class="stage-note">Diagram. Dots are illustrative, not counts.</p>
+    </div>
+    <div class="steps">
+      <div class="step" data-scene="0"><div class="flyer" style="--r:-.6deg">
+        <h2>Eight roads.</h2>
+        <p>Each column of dots is one of the histories above, drawn the same size on purpose.</p>
+      </div></div>
+      <div class="step" data-scene="1"><div class="flyer" style="--r:.5deg">
+        <h2>Different roads can lead into the same storm.</h2>
+        <p>Rent. Food. Health. Time. Debt. Childcare. Transportation. Work. The labels start to matter less than the bills.</p>
+      </div></div>
+      <div class="step" data-scene="2"><div class="flyer" style="--r:-.4deg">
+        <h2>Follow the money.</h2>
+        <p>Every moving dot is a household payment: rent, groceries, insurance, gas, phone, debt. Watch where it goes.</p>
+        <p class="big">We are separated socially. Our money already knows how to organize.</p>
+      </div></div>
+      <div class="step" data-scene="3"><div class="flyer" style="--r:.7deg">
+        <h2>The sideways problem.</h2>
+        <p>Communities under pressure argue across. Meanwhile money moves down and out of all of them.</p>
+        <p class="big">Fighting sideways doesn't lift what's pressing down on any of you.</p>
+      </div></div>
+      <div class="step" data-scene="4"><div class="flyer" style="--r:-.5deg">
+        <h2>What do we actually have?</h2>
+        <p>A car. A wrench. A free Saturday. A nursing license. A second language. A community is richer than its bank balance.</p>
+        <ul class="key" id="story-key"></ul>
+      </div></div>
+      <div class="step" data-scene="5"><div class="flyer" style="--r:.4deg">
+        <h2>What do we need?</h2>
+        <p>A ride Tuesday. Groceries until Friday. Someone to look at the car. Three hours of childcare. Needs show up as open rings in the same network.</p>
+      </div></div>
+      <div class="step" data-scene="6"><div class="flyer flyer--final" style="--r:-.3deg">
+        <h2>You were never surrounded by nothing.</h2>
+        <p class="big">You were surrounded by uncoordinated people.</p>
+        <div class="actions" style="margin-top:1.25rem"><button type="button" class="btn btn--red" data-act="find">Find my Huddle</button></div>
+      </div></div>
+    </div>
+  </section>
+
+  <section class="app" id="app" aria-label="THE HUDDLE app">
+    <div class="panel" id="panel-near"></div>
+    <div class="panel" id="panel-needs" hidden></div>
+    <div class="panel" id="panel-offers" hidden></div>
+    <div class="panel" id="panel-huddles" hidden></div>
+    <div class="panel" id="panel-projects" hidden></div>
+    <div class="panel" id="panel-pools" hidden></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div>
+    <h2>Coming from Freedom Floor?</h2>
+    <p>Freedom Floor shows what's happening to ordinary people. This is the next part: you are not the only one under this pressure. Find the others.</p>
+  </div>
+  <div>
+    <h2>How this prototype treats you</h2>
+    <ul>
+      <li>No race or ethnicity field. Matching uses place, need, timing, and trust.</li>
+      <li>Neighbors see your neighborhood, never your address.</li>
+      <li>Neighborhood counts under 3 show as "fewer than 3."</li>
+      <li>Needs close after 14 days or when resolved.</li>
+      <li>Simulated neighbors are labeled. No real money moves. Your posts are saved privately, only for you.</li>
+    </ul>
+  </div>
+  <div>
+    <h2>Where the dates come from</h2>
+    <ul>
+      <li><a href="https://www.loc.gov" target="_blank" rel="noopener">Library of Congress</a></li>
+      <li><a href="https://www.archives.gov" target="_blank" rel="noopener">National Archives</a></li>
+      <li><a href="https://www.historylink.org" target="_blank" rel="noopener">HistoryLink, Washington State history</a></li>
+      <li><a href="https://densho.org" target="_blank" rel="noopener">Densho, Japanese American incarceration</a></li>
+      <li><a href="https://dsl.richmond.edu/panorama/redlining" target="_blank" rel="noopener">Mapping Inequality, HOLC maps</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- dialogs -->
+<dialog id="dlg-onboard" aria-labelledby="ob-h">
+  <form class="dlg" id="form-onboard" novalidate>
+    <h2 id="ob-h">Find my Huddle</h2>
+    <p class="sub">Two questions, then you're in.</p>
+    <p class="promise">We never ask your race. Neighbors see your neighborhood, not your address, until you both agree on a place to meet.</p>
+    <div class="field"><label for="ob-name">What should neighbors call you?</label>
+      <input type="text" id="ob-name" maxlength="32" autocomplete="nickname" placeholder="A display name, not your legal name">
+      <p class="hint">Optional. Leave it blank to show up as "Neighbor."</p></div>
+    <fieldset class="field"><legend>Which neighborhood are you in?</legend>
+      <div class="opts opts--grid" id="ob-hoods"></div>
+      <p class="err" id="ob-err" hidden>Pick a neighborhood so we can show what's near you.</p></fieldset>
+    <div class="dlg-foot">
+      <button type="button" class="btn" data-act="dlg-close">Not now</button>
+      <button type="submit" class="btn btn--red">Show what's near me</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-post" aria-labelledby="post-h">
+  <form class="dlg" id="form-post" novalidate>
+    <h2 id="post-h">Post a need</h2>
+    <p class="sub" id="post-sub"></p>
+    <fieldset class="field"><legend>What kind of thing?</legend><div class="opts" id="post-cats"></div></fieldset>
+    <fieldset class="field" id="post-mode-f"><legend id="post-mode-l">How?</legend><div class="opts" id="post-modes"></div></fieldset>
+    <div class="field"><label for="post-text" id="post-text-l">Say it plainly</label>
+      <textarea id="post-text" maxlength="200"></textarea>
+      <p class="hint">Skip names, addresses, and case numbers. You can share details once you connect.</p>
+      <p class="err" id="post-err" hidden>Write at least a few words so neighbors know what this is.</p></div>
+    <div class="field"><label for="post-hood">Neighborhood</label><select id="post-hood"></select></div>
+    <div class="field"><label for="post-vis">Who sees it</label>
+      <select id="post-vis">
+        <option value="hood">People in my neighborhood</option>
+        <option value="near" selected>My neighborhood and the ones next to it</option>
+        <option value="huddle">Only people in my Huddles</option>
+      </select></div>
+    <label class="check"><input type="checkbox" id="post-anon"> Hide my display name on this post</label>
+    <div class="dlg-foot">
+      <button type="button" class="btn" data-act="dlg-close">Cancel</button>
+      <button type="submit" class="btn btn--red" id="post-submit">Post need</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-huddle" aria-labelledby="hud-h">
+  <form class="dlg" id="form-huddle" novalidate>
+    <h2 id="hud-h">Start a Huddle</h2>
+    <p class="sub">A Huddle is a small group that coordinates one thing well: a building, a block, rides, tools, food.</p>
+    <fieldset class="field"><legend>What kind?</legend><div class="opts" id="hud-types"></div></fieldset>
+    <div class="field"><label for="hud-name">Name it</label>
+      <input type="text" id="hud-name" maxlength="48" placeholder="Night shift rides, Building on 23rd, Tuesday tool swap">
+      <p class="err" id="hud-err" hidden>Give the Huddle a name people will recognize.</p></div>
+    <div class="field"><label for="hud-hood">Neighborhood</label><select id="hud-hood"></select></div>
+    <div class="dlg-foot">
+      <button type="button" class="btn" data-act="dlg-close">Cancel</button>
+      <button type="submit" class="btn btn--red">Start Huddle</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlg-report" aria-labelledby="rep-h">
+  <form class="dlg" id="form-report" novalidate>
+    <h2 id="rep-h">Report</h2>
+    <p class="sub" id="rep-sub"></p>
+    <fieldset class="field"><legend>What happened?</legend><div class="opts" id="rep-reasons">
+      <label><input type="radio" name="rep" value="unsafe" checked><span>Unsafe or threatening</span></label>
+      <label><input type="radio" name="rep" value="scam"><span>Scam, or asked for money outside a pool</span></label>
+      <label><input type="radio" name="rep" value="hate"><span>Discriminatory or hateful</span></label>
+      <label><input type="radio" name="rep" value="other"><span>Something else</span></label>
+    </div></fieldset>
+    <p class="hint">Reports go to Huddle stewards. The person isn't told who reported them.</p>
+    <div class="dlg-foot">
+      <button type="button" class="btn" data-act="dlg-close">Cancel</button>
+      <button type="submit" class="btn btn--red">Send report</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* =====================================================================
+   THE HUDDLE — prototype
+   Visual rule: nothing in here fabricates a person. Before real photos are
+   sourced, the page uses diagrams, dots, maps, and type.
+
+   ARCHIVE: add real licensed or public-domain documentary photographs only.
+   Leave it empty rather than inventing anything. Format:
+   { src:'https://…', alt:'What is in the photo', place:'Chicago', year:'1973',
+     credit:'John H. White · DOCUMERICA / NARA' }
+   ===================================================================== */
+const ARCHIVE = [];
+
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DAY = 864e5;
+const PAPER = '#ECEBE6';
+
+/* ---------- categories (colors borrowed from the utility paint code) ---------- */
+const CATS = [
+  { id:'rides',   name:'Rides',            color:'#FFC400', have:'open offers of rides' },
+  { id:'food',    name:'Food',             color:'#00873E', have:'open offers of food' },
+  { id:'care',    name:'Childcare & care', color:'#EE3E8F', have:'offers of childcare or elder care' },
+  { id:'repair',  name:'Repair & trades',  color:'#FF6A00', have:'offers of repair, trade, or moving help' },
+  { id:'knowhow', name:'Know-how',         color:'#0061B0', have:'offers of legal, health, tech, tutoring, or translation help' },
+  { id:'things',  name:'Tools & things',   color:'#6E2C91', have:'tools, items, or spaces to lend or give' },
+  { id:'housing', name:'Housing',          color:'#D5001C', have:'offers of housing help' },
+  { id:'money',   name:'Money',            color:'#000000', have:'offers to put money in' }
+];
+const CAT = Object.fromEntries(CATS.map(c => [c.id, c]));
+
+const MODES = {
+  give:'Give', lend:'Lend', help:'Help', teach:'Teach', trade:'Trade', pool:'Pool'
+};
+const MODE_HINT = {
+  give:'no repayment', lend:'borrow it, bring it back', help:'my time', teach:'show you how', trade:'swap for something', pool:'put toward a shared fund'
+};
+const SOON = { today:'Needed today', week:'Needed this week', month:'Needed this month' };
+
+/* ---------- neighborhoods (schematic, not to scale) ---------- */
+const HOODS = [
+  { id:'lakecity',  name:'Lake City',          x:72, y:8 },
+  { id:'northgate', name:'Northgate',          x:50, y:10 },
+  { id:'greenwood', name:'Greenwood',          x:28, y:12 },
+  { id:'ballard',   name:'Ballard',            x:8,  y:30 },
+  { id:'udistrict', name:'University District',x:64, y:31 },
+  { id:'fremont',   name:'Fremont',            x:34, y:35 },
+  { id:'downtown',  name:'Downtown',           x:28, y:59 },
+  { id:'capitol',   name:'Capitol Hill',       x:56, y:53 },
+  { id:'central',   name:'Central District',   x:81, y:64 },
+  { id:'delridge',  name:'Delridge',           x:8,  y:81 },
+  { id:'beacon',    name:'Beacon Hill',        x:50, y:79 },
+  { id:'georgetown',name:'Georgetown',         x:30, y:97 },
+  { id:'columbia',  name:'Columbia City',      x:80, y:91 },
+  { id:'southpark', name:'South Park',         x:14, y:112 },
+  { id:'whitecenter',name:'White Center',      x:-8, y:101 },
+  { id:'rainierbeach',name:'Rainier Beach',    x:70, y:114 }
+];
+const EDGES = [
+  ['lakecity','northgate'],['lakecity','udistrict'],['northgate','greenwood'],['northgate','udistrict'],
+  ['greenwood','ballard'],['greenwood','fremont'],['ballard','fremont'],['udistrict','fremont'],['udistrict','capitol'],
+  ['fremont','downtown'],['fremont','capitol'],['capitol','downtown'],['capitol','central'],['downtown','central'],
+  ['downtown','beacon'],['downtown','delridge'],['central','beacon'],['central','columbia'],['beacon','columbia'],
+  ['beacon','georgetown'],['delridge','georgetown'],['delridge','whitecenter'],['georgetown','southpark'],
+  ['southpark','whitecenter'],['columbia','rainierbeach']
+];
+const HOOD = Object.fromEntries(HOODS.map(h => [h.id, { ...h, adj:[] }]));
+EDGES.forEach(([a,b]) => { HOOD[a].adj.push(b); HOOD[b].adj.push(a); });
+const isNear = (a, b) => a === b || (HOOD[a] && HOOD[a].adj.includes(b));
+
+/* ---------- simulation templates ---------- */
+const OFFER_T = {
+  rides:['Rides to work before 8am on weekdays','Can drive to medical appointments on Tuesdays','Grocery run every Saturday, room for 3','Rides to the airport or the bus station with a day of notice','Have a car seat, happy to drive parents with kids'],
+  food:['Extra produce from the garden most weeks','Cooking a big pot on Sundays, can share 4 meals','Splitting a bulk order of rice and beans','Can pick up from the food bank for anyone who can\u2019t get there'],
+  care:['Can watch kids after school, 3 to 6pm','Retired teacher, happy to babysit on weekends','Can check in on an elder neighbor during the week','Childcare swap: I watch yours Monday, you watch mine Thursday'],
+  repair:['Mechanic, free diagnostics on Saturdays','Electrician, small fixes on weekends','Bike repair in my garage','Can patch drywall and rehang doors','Moving help, I have a hand truck'],
+  knowhow:['Paralegal, can help you read a lease or an eviction notice','Nurse, can help make sense of a medical bill','Tax help on weekends in February','Spanish and English translation for appointments','Tutoring in algebra and chemistry','Can set up a laptop or fix a phone','Resume and job application help'],
+  things:['Drill, ladder, and circular saw to lend','Older laptop that still works, free','Crib and stroller to give away','Pressure washer to lend','Folding tables and chairs for events','Back room free for meetings of up to 12'],
+  housing:['Know which landlords around here take vouchers','Couch open for a week in an emergency','Can help search listings and fill out applications','Tenant union member, can walk you through your rights'],
+  money:['$5 a month toward the car emergency pool','Can cover one bus pass this month','$20 toward a neighbor\u2019s utility gap']
+};
+const OFFER_MODES = {
+  rides:['help'], food:['give','pool'], care:['help','trade'], repair:['help','teach'],
+  knowhow:['teach','help'], things:['lend','give'], housing:['help'], money:['pool','give']
+};
+const NEED_T = {
+  rides:['Need a ride Tuesday to a clinic appointment','Ride to a job interview Thursday morning','Ride to the pharmacy this week','Need weekday rides until my car is fixed'],
+  food:['Need groceries until Friday','Baby formula for this week','Anyone splitting a bulk food order?','Need a few days of meals after a hospital stay'],
+  care:['Need childcare for three hours Wednesday','Someone to sit with my dad Saturday afternoon','After-school pickup two days a week','Backup sitter for night shifts'],
+  repair:['Car won\u2019t start, need someone to look at it','Help moving on the 1st, one bedroom','Leaking sink and the landlord isn\u2019t answering','Heater stopped working'],
+  knowhow:['Help understanding a medical bill','Help reading an eviction notice','Job leads in warehouse or delivery work','Help filling out a benefits application','Math tutor for a 9th grader','Translation for a parent-teacher meeting'],
+  things:['Need a laptop for school','Need a bed frame and a table','Borrow a ladder for one day','Winter coat for a kid, size 10'],
+  housing:['Emergency housing leads for a family of 3','Rent is going up, need help finding something cheaper','Help with a rental application'],
+  money:['Short $140 on the electric bill','Bus pass until my first paycheck','Tow fee after a breakdown']
+};
+const HTYPES = [
+  { id:'apartment', name:'Apartment', about:'People in one building.', posts:['Heat is out on the third floor again. Logging it together for the landlord.','Package shelf swap: leave what you don\u2019t need, take what you do.'] },
+  { id:'block', name:'Block', about:'People who live near one another.', posts:['Street cleanup Saturday at 10. Bags and grabbers provided.','Anyone have jumper cables? Battery died out front.'] },
+  { id:'parent', name:'Parent', about:'Childcare and school coordination.', posts:['Swap sheet for next week is up. Three slots open Thursday.','Winter coat swap at the next meetup. Bring what doesn\u2019t fit.'] },
+  { id:'worker', name:'Worker', about:'People at one workplace or in one industry.', posts:['Shift swap board for the holiday weeks is open.','Carpool for the 5:40am start, two seats left.'] },
+  { id:'food', name:'Food', about:'Bulk buying, meals, and pantry coordination.', posts:['Bulk order closes Friday. Rice and oil at split cost.','Sunday meal share, 12 plates. Containers welcome.'] },
+  { id:'ride', name:'Ride', about:'Transportation sharing.', posts:['Who can cover Thursday clinic rides this week?','New driver schedule is posted. Two gaps on Monday.'] },
+  { id:'tool', name:'Tool', about:'Equipment and repair.', posts:['The drill is back. Ladder is out until Sunday.','Repair meetup Saturday 10 to 1. Bring the broken thing.'] },
+  { id:'emergency', name:'Emergency', about:'A small emergency-response pool.', posts:['Pool covered a tow on Monday. Receipt is posted.','Phone tree test Saturday at noon. Reply when you get the call.'] },
+  { id:'skill', name:'Skill', about:'Teach and trade skills.', posts:['Learning to change brake pads next Saturday.','Spanish and English conversation swap on Wednesdays.'] }
+];
+const HTYPE = Object.fromEntries(HTYPES.map(t => [t.id, t]));
+
+/* ---------- seeded random ---------- */
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const pick = (r, a) => a[Math.floor(r() * a.length)];
+function wpick(r, weights){ const keys = Object.keys(weights); const sum = keys.reduce((s,k) => s + weights[k], 0); let x = r() * sum; for (const k of keys){ x -= weights[k]; if (x <= 0) return k; } return keys[keys.length-1]; }
+
+/* ---------- simulated network (labeled everywhere it shows) ---------- */
+const SIM = (() => {
+  const r = rng(20260910);
+  const people = [], offers = [], needs = [], huddles = [];
+  const used = new Set();
+  const pid = () => { let n; do { n = String(1000 + Math.floor(r() * 9000)); } while (used.has(n)); used.add(n); return 'Neighbor ' + n; };
+  const offerW = { rides:1.1, food:1, care:.8, repair:.9, knowhow:1.2, things:1, housing:.45, money:.7 };
+  const needW = { rides:1, food:1.1, care:.9, repair:.8, knowhow:1, things:.7, housing:.9, money:.8 };
+  HOODS.forEach(h => {
+    const count = 40 + Math.floor(r() * 180);
+    const ppl = [];
+    for (let i = 0; i < count; i++){
+      const p = { id:pid(), hood:h.id, helped:Math.floor(r() * r() * 24), ref:r() < .55 };
+      people.push(p); ppl.push(p);
+    }
+    const nOff = Math.round(count * (.42 + r() * .22));
+    for (let i = 0; i < nOff; i++){
+      const c = wpick(r, offerW);
+      offers.push({ id:'so' + offers.length, kind:'offer', cat:c, mode:pick(r, OFFER_MODES[c]), text:pick(r, OFFER_T[c]), hood:h.id, person:pick(r, ppl).id, age:Math.floor(r() * 13), sim:true });
+    }
+    const nNeed = Math.round(count * (.2 + r() * .15));
+    for (let i = 0; i < nNeed; i++){
+      const c = wpick(r, needW);
+      needs.push({ id:'sn' + needs.length, kind:'need', cat:c, soon:pick(r, ['today','week','week','month']), text:pick(r, NEED_T[c]), hood:h.id, person:pick(r, ppl).id, age:Math.floor(r() * 13), sim:true });
+    }
+    const types = HTYPES.slice().sort(() => r() - .5).slice(0, 2);
+    types.forEach(t => {
+      huddles.push({ id:'sh' + huddles.length, type:t.id, name:t.name + ' Huddle', hood:h.id, members:6 + Math.floor(r() * r() * 214), sim:true,
+        board:t.posts.map((txt, i) => ({ id:'sb' + huddles.length + '-' + i, text:txt, author:pick(r, ppl).id, age:i * 2 + Math.floor(r() * 3) })) });
+    });
+  });
+  const person = Object.fromEntries(people.map(p => [p.id, p]));
+  return { people, offers, needs, huddles, person, resolvedBase:318 };
+})();
+
+const POOLS = [
+  { id:'car', name:'Car emergency pool', cat:'money', members:384, avg:'about $4.80 a month',
+    purpose:'Tires, tows, batteries, and transit passes when a car is down.',
+    ledger:[
+      ['Balance carried from June', 612.30],
+      ['July contributions, 371 members', 1780.80],
+      ['Tow, Delridge', -145.00],
+      ['Two tires, Beacon Hill', -212.40],
+      ['Battery, Lake City', -168.99],
+      ['August contributions, 384 members', 1843.20],
+      ['Transit passes for 3 members', -150.00],
+      ['Alternator, Georgetown', -386.50],
+      ['Tow, Rainier Beach', -138.00]
+    ] },
+  { id:'grocery', name:'Grocery gap pool', cat:'food', members:212, avg:'about $6 a month',
+    purpose:'Covers groceries for a household until the next paycheck or benefits day.',
+    ledger:[
+      ['Balance carried from June', 240.00],
+      ['July contributions, 198 members', 1188.00],
+      ['Groceries for 9 households', -1035.75],
+      ['August contributions, 212 members', 1272.00],
+      ['Groceries for 11 households', -1261.40]
+    ] },
+  { id:'care', name:'Backup childcare pool', cat:'care', members:96, avg:'about $8 a month',
+    purpose:'Pays a trusted sitter when a parent\u2019s shift changes last minute.',
+    ledger:[
+      ['Balance carried from June', 180.00],
+      ['July contributions, 91 members', 728.00],
+      ['Sitter hours, 14 shifts', -672.00],
+      ['August contributions, 96 members', 768.00],
+      ['Sitter hours, 12 shifts', -576.00]
+    ] }
+];
+
+const PROJECT = {
+  name:'Buy a community van', where:'South Seattle, Columbia City to Rainier Beach', goal:18000, base:11420, members:417,
+  purpose:'Rides to work, medical appointments, and groceries for people without a car.',
+  roles:[
+    { name:'Mechanic to inspect used vans', by:null },
+    { name:'Driver schedule coordinator', by:'Neighbor 2290' },
+    { name:'Insurance research', by:null },
+    { name:'Weeknight parking spot', by:null }
+  ],
+  log:[
+    ['Sep 6', 'Found two used vans under $16,000 to inspect.'],
+    ['Aug 29', 'A community center offered weekend parking. Still need weeknights.'],
+    ['Aug 14', 'Passed $10,000 in pledges.']
+  ]
+};
+
+/* ---------- state + storage ---------- */
+const fresh = () => ({ v:1, me:{ name:'', hood:null, onboarded:false }, sim:true, posts:[], exchanges:[], resolved:0, resolvedSim:[], joined:[], myHuddles:[], board:{}, poolIn:[], pledges:[], roles:[], blocked:[], reported:[] });
+let S = fresh();
+const UI = { tab:'near', layer:'have', mapCat:null, sel:null, needScope:null, offerScope:null, needCat:null, offerCat:null, needLimit:20, offerLimit:20, openHuddle:null, matchFor:null, postKind:'need', afterOnboard:null, reportPerson:null };
+
+const hasStore = !!(window.storage && typeof window.storage.get === 'function');
+async function load(){
+  if (!hasStore) return;
+  try {
+    const r = await window.storage.get('huddle-state', false);
+    if (r && r.value){ S = Object.assign(fresh(), JSON.parse(r.value)); }
+  } catch (e) { /* first visit: nothing stored yet */ }
+  const cutoff = Date.now() - 14 * DAY;
+  S.posts = S.posts.filter(p => p.created > cutoff);
+}
+let saveTimer = null;
+function save(){
+  if (!hasStore) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try { await window.storage.set('huddle-state', JSON.stringify(S), false); }
+    catch (e) { console.error('Could not save', e); }
+  }, 250);
+}
+
+/* ---------- helpers ---------- */
+const $ = (s, root = document) => root.querySelector(s);
+const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+const money = n => (n < 0 ? '-' : '') + '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const whole = n => '$' + Math.round(n).toLocaleString('en-US');
+const kCount = n => n === 0 ? '0' : n < 3 ? 'fewer than 3' : n.toLocaleString('en-US');
+const myName = () => S.me.name.trim() || 'Neighbor';
+const ageOf = it => it.sim ? it.age : Math.floor((Date.now() - it.created) / DAY);
+const ageText = d => d <= 0 ? 'Posted today' : d === 1 ? 'Posted yesterday' : `Posted ${d} days ago`;
+const closesText = d => { const left = 14 - d; return left <= 1 ? 'Closes tomorrow' : `Closes in ${left} days`; };
+const uid = p => p + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+
+function allOffers(){
+  const mine = S.posts.filter(p => p.kind === 'offer');
+  const sim = S.sim ? SIM.offers.filter(o => !S.blocked.includes(o.person)) : [];
+  return mine.concat(sim);
+}
+function allNeeds(){
+  const mine = S.posts.filter(p => p.kind === 'need');
+  const sim = S.sim ? SIM.needs.filter(n => !S.blocked.includes(n.person) && !S.resolvedSim.includes(n.id)) : [];
+  return mine.concat(sim);
+}
+function findItem(id){ return S.posts.find(p => p.id === id) || SIM.offers.find(o => o.id === id) || SIM.needs.find(n => n.id === id); }
+function allHuddles(){ return S.myHuddles.concat(S.sim ? SIM.huddles : []); }
+
+function scopeOptions(current){
+  const opts = [];
+  const me = S.me.hood;
+  if (me){
+    opts.push([`hood:${me}`, `In ${HOOD[me].name}`]);
+    opts.push([`near:${me}`, `${HOOD[me].name} and next door`]);
+  }
+  if (current && current.startsWith('hood:') && current.slice(5) !== me) opts.push([current, `In ${HOOD[current.slice(5)].name}`]);
+  opts.push(['city', 'Whole city']);
+  return opts;
+}
+function inScope(item, scope){
+  if (!scope || scope === 'city') return true;
+  const [kind, h] = scope.split(':');
+  return kind === 'hood' ? item.hood === h : isNear(h, item.hood);
+}
+function defaultScope(){ return S.me.hood ? `near:${S.me.hood}` : 'city'; }
+
+/* ---------- toasts ---------- */
+function toast(msg, action){
+  const box = $('#toasts');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span>${esc(msg)}</span>`;
+  if (action){
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = action.label;
+    b.addEventListener('click', () => { action.run(); t.remove(); });
+    t.appendChild(b);
+  }
+  box.appendChild(t);
+  while (box.children.length > 3) box.firstElementChild.remove();
+  setTimeout(() => t.remove(), action ? 7000 : 4800);
+}
+
+/* ---------- dialogs ---------- */
+function openDlg(id){ const d = document.getElementById(id); if (d.showModal) d.showModal(); else d.setAttribute('open', ''); }
+function closeDlg(d){ if (d.close) d.close(); else d.removeAttribute('open'); }
+
+function requireHood(then){
+  if (S.me.onboarded && S.me.hood){ then(); return; }
+  UI.afterOnboard = then;
+  $('#ob-name').value = S.me.name;
+  $('#ob-hoods').innerHTML = HOODS.slice().sort((a,b) => a.name.localeCompare(b.name)).map(h =>
+    `<label><input type="radio" name="ob-hood" value="${h.id}"${S.me.hood === h.id ? ' checked' : ''}><span>${esc(h.name)}</span></label>`).join('');
+  $('#ob-err').hidden = true;
+  openDlg('dlg-onboard');
+}
+
+function hoodSelect(sel, value){
+  sel.innerHTML = HOODS.slice().sort((a,b) => a.name.localeCompare(b.name)).map(h => `<option value="${h.id}"${h.id === value ? ' selected' : ''}>${esc(h.name)}</option>`).join('');
+}
+
+function openPost(kind, preset = {}){
+  requireHood(() => {
+    UI.postKind = kind;
+    const need = kind === 'need';
+    $('#post-h').textContent = need ? 'Post a need' : 'Post an offer';
+    $('#post-sub').textContent = need
+      ? 'Neighbors who can help will see it. It closes after 14 days, or sooner when it\u2019s resolved.'
+      : 'Offer what you can spare. Not just money: time, a skill, a tool, a ride.';
+    $('#post-submit').textContent = need ? 'Post need' : 'Post offer';
+    $('#post-text-l').textContent = need ? 'What do you need?' : 'What can you offer?';
+    $('#post-text').placeholder = need ? 'Need a ride Tuesday morning to a clinic appointment' : 'Can drive to appointments on Tuesday mornings';
+    $('#post-text').value = preset.text || '';
+    const cat = preset.cat || 'rides';
+    $('#post-cats').innerHTML = CATS.map(c => `<label><input type="radio" name="post-cat" value="${c.id}"${c.id === cat ? ' checked' : ''}><span style="--c:${c.color}"><i></i>${esc(c.name)}</span></label>`).join('');
+    $('#post-mode-l').textContent = need ? 'How soon?' : 'How are you offering it?';
+    $('#post-modes').innerHTML = need
+      ? Object.entries(SOON).map(([k,v], i) => `<label><input type="radio" name="post-mode" value="${k}"${i === 1 ? ' checked' : ''}><span>${esc(v.replace('Needed ', ''))}</span></label>`).join('')
+      : Object.entries(MODES).map(([k,v], i) => `<label><input type="radio" name="post-mode" value="${k}"${i === 2 ? ' checked' : ''}><span title="${esc(MODE_HINT[k])}">${esc(v)}: ${esc(MODE_HINT[k])}</span></label>`).join('');
+    hoodSelect($('#post-hood'), S.me.hood);
+    $('#post-vis').value = 'near';
+    $('#post-anon').checked = false;
+    $('#post-err').hidden = true;
+    openDlg('dlg-post');
+    setTimeout(() => $('#post-text').focus(), 30);
+  });
+}
+
+/* ---------- exchanges ---------- */
+function connect(simItem, myPostId){
+  requireHood(() => {
+    if (S.exchanges.some(x => x.simId === simItem.id)){ toast('You already reached out about this one.'); return; }
+    const giving = simItem.kind === 'need';
+    const ex = { id:uid('x'), simId:simItem.id, myPost:myPostId || null, other:simItem.person, cat:simItem.cat, text:simItem.text, dir:giving ? 'giving' : 'getting', status:'sent', created:Date.now() };
+    S.exchanges.push(ex); save(); render();
+    toast(giving ? `Offer sent to ${simItem.person}.` : `Request sent to ${simItem.person}.`);
+    setTimeout(() => {
+      const live = S.exchanges.find(x => x.id === ex.id);
+      if (!live) return;
+      live.status = 'yes'; save(); render();
+      toast(`${simItem.person} said yes. Pick a public place to meet; your address stays hidden.`);
+    }, REDUCED ? 600 : 1600);
+  });
+}
+function resolveExchange(id){
+  const ex = S.exchanges.find(x => x.id === id); if (!ex) return;
+  S.resolved += 1;
+  if (ex.dir === 'giving') S.resolvedSim.push(ex.simId);
+  if (ex.myPost) S.posts = S.posts.filter(p => !(p.id === ex.myPost && p.kind === 'need'));
+  S.exchanges = S.exchanges.filter(x => x.id !== id);
+  if (UI.matchFor === ex.myPost) UI.matchFor = null;
+  save(); render();
+  toast('Marked resolved. The need came off the board.');
+}
+
+function matchesFor(item){
+  const pool = item.kind === 'need' ? allOffers() : allNeeds();
+  return pool
+    .filter(o => o.sim && o.cat === item.cat && isNear(item.hood, o.hood))
+    .map(o => ({ o, s:(o.hood === item.hood ? 2 : 1) + Math.min(SIM.person[o.person].helped, 10) / 10 + (o.soon === 'today' ? .3 : 0) }))
+    .sort((a,b) => b.s - a.s).slice(0, 4).map(x => x.o);
+}
+
+/* ---------- rendering: shared bits ---------- */
+function whoLine(it){
+  if (!it.sim){
+    const vis = { hood:'people in your neighborhood', near:'your neighborhood and next door', huddle:'your Huddles only' }[it.vis] || 'nearby';
+    return `<span class="yours">Yours</span>, visible to ${esc(vis)}${it.anon ? ', display name hidden' : ''}`;
+  }
+  const p = SIM.person[it.person];
+  const helped = p.helped === 0 ? 'new here' : `helped ${p.helped} time${p.helped === 1 ? '' : 's'}`;
+  return `${esc(p.id)}, ${helped}${p.ref ? ', community reference checked' : ''}`;
+}
+function moreMenu(person){
+  return `<details class="more"><summary aria-label="More options for ${esc(person)}">More</summary><div class="menu">
+    <button type="button" data-act="report" data-person="${esc(person)}">Report</button>
+    <button type="button" data-act="block" data-person="${esc(person)}">Block ${esc(person)}</button></div></details>`;
+}
+function postRow(it, opts = {}){
+  const c = CAT[it.cat];
+  const need = it.kind === 'need';
+  const d = ageOf(it);
+  const kindTxt = need ? SOON[it.soon] : `${MODES[it.mode]}: ${MODE_HINT[it.mode]}`;
+  const ex = S.exchanges.find(x => x.simId === it.id);
+  let acts = '';
+  if (opts.matchOf){
+    acts = ex ? `<span class="status${ex.status === 'yes' ? ' yes' : ''}">${ex.status === 'yes' ? 'Said yes' : 'Waiting'}</span>`
+      : `<button type="button" class="btn btn--sm btn--ink" data-act="connect" data-id="${it.id}" data-mine="${esc(opts.matchOf)}">${need ? 'Offer help' : 'Ask to connect'}</button>`;
+  } else if (!it.sim){
+    acts = `<button type="button" class="btn btn--sm btn--ink" data-act="matches" data-id="${it.id}">${need ? 'Find help' : 'Find who needs this'}</button>
+      <button type="button" class="btn btn--sm" data-act="remove" data-id="${it.id}">Take down</button>`;
+  } else {
+    acts = ex ? `<span class="status${ex.status === 'yes' ? ' yes' : ''}">${ex.status === 'yes' ? 'Said yes' : need ? 'Offer sent' : 'Request sent'}</span>`
+      : `<button type="button" class="btn btn--sm btn--ink" data-act="connect" data-id="${it.id}">${need ? 'I can help' : 'Ask for this'}</button>`;
+  }
+  if (it.sim && !opts.matchOf) acts += moreMenu(it.person);
+  return `<li class="post" style="--c:${c.color}"><span class="paint" aria-hidden="true"></span>
+    <div><p class="txt">${esc(it.text)}</p>
+      <p class="meta"><span>${esc(c.name)}</span><span>${esc(kindTxt)}</span><span>${esc(HOOD[it.hood].name)}</span><span>${ageText(d)}${need ? ', ' + closesText(d).toLowerCase() : ''}</span></p>
+      <p class="who">${whoLine(it)}</p></div>
+    <div class="acts">${acts}</div></li>`;
+}
+const stamp = () => `<span class="stamp">Simulated neighbors, not real people</span>`;
+
+function catChips(act, active){
+  return `<div class="chips" role="group" aria-label="Filter by kind">` +
+    `<button type="button" class="chip" data-act="${act}" data-cat="" aria-pressed="${!active}">All kinds</button>` +
+    CATS.map(c => `<button type="button" class="chip" style="--c:${c.color}" data-act="${act}" data-cat="${c.id}" aria-pressed="${active === c.id}"><i></i>${esc(c.name)}</button>`).join('') + `</div>`;
+}
+
+/* ---------- NEAR ME ---------- */
+function aggregates(cat){
+  const offers = allOffers(), needs = allNeeds();
+  const A = {};
+  HOODS.forEach(h => { A[h.id] = { people:0, offers:{}, needs:{}, offerN:0, needN:0 }; CATS.forEach(c => { A[h.id].offers[c.id] = 0; A[h.id].needs[c.id] = 0; }); });
+  if (S.sim) SIM.people.forEach(p => { if (!S.blocked.includes(p.id)) A[p.hood].people++; });
+  if (S.me.hood) A[S.me.hood].people++;
+  offers.forEach(o => { A[o.hood].offers[o.cat]++; if (!cat || o.cat === cat) A[o.hood].offerN++; });
+  needs.forEach(n => { A[n.hood].needs[n.cat]++; if (!cat || n.cat === cat) A[n.hood].needN++; });
+  return A;
+}
+function pairMatches(A, a, b, cat){
+  let n = 0;
+  CATS.forEach(c => { if (cat && c.id !== cat) return; n += Math.min(A[a].needs[c.id], A[b].offers[c.id]); if (a !== b) n += Math.min(A[b].needs[c.id], A[a].offers[c.id]); });
+  return n;
+}
+
+function mapSVG(A){
+  const layer = UI.layer, cat = UI.mapCat;
+  const sp = .66;
+  let edges = '', links = '', dots = '', labels = '', hits = '';
+  EDGES.forEach(([a,b]) => { const p = HOOD[a], q = HOOD[b]; edges += `<line class="adj" x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}"/>`; });
+  if (layer === 'links'){
+    EDGES.forEach(([a,b]) => {
+      const n = pairMatches(A, a, b, cat); if (!n) return;
+      const p = HOOD[a], q = HOOD[b];
+      const mx = (p.x + q.x) / 2 + (q.y - p.y) * .12, my = (p.y + q.y) / 2 - (q.x - p.x) * .12;
+      links += `<path class="link" d="M${p.x} ${p.y} Q${mx.toFixed(1)} ${my.toFixed(1)} ${q.x} ${q.y}" fill="none" stroke-width="${(.2 + Math.sqrt(n) * .15).toFixed(2)}"/>`;
+    });
+  }
+  HOODS.forEach(h => {
+    const a = A[h.id];
+    let items = [];
+    if (layer === 'people') items = Array(a.people).fill({ fill:'#000' });
+    else if (layer === 'have') CATS.forEach(c => { if (!cat || cat === c.id) for (let i = 0; i < a.offers[c.id]; i++) items.push({ fill:c.color }); });
+    else if (layer === 'need') CATS.forEach(c => { if (!cat || cat === c.id) for (let i = 0; i < a.needs[c.id]; i++) items.push({ ring:c.color }); });
+    else { const n = pairMatches(A, h.id, h.id, cat); items = Array(n).fill({ fill:'#D5001C' }); }
+    items.forEach((it, i) => {
+      const rr = sp * Math.sqrt(i + .5), an = i * 2.39996;
+      const x = (h.x + rr * Math.cos(an)).toFixed(2), y = (h.y + rr * Math.sin(an)).toFixed(2);
+      dots += it.ring ? `<circle cx="${x}" cy="${y}" r=".24" fill="none" stroke="${it.ring}" stroke-width=".2"/>` : `<circle cx="${x}" cy="${y}" r=".31" fill="${it.fill}"/>`;
+    });
+    const outer = sp * Math.sqrt(items.length + .5) + .6;
+    const sel = UI.sel === h.id;
+    if (sel) dots += `<circle cx="${h.x}" cy="${h.y}" r="${(outer + .9).toFixed(2)}" fill="none" stroke="#D5001C" stroke-width=".55"/>`;
+    if (items.length === 0) dots += `<circle cx="${h.x}" cy="${h.y}" r=".8" fill="none" stroke="#000" stroke-width=".3"/>`;
+    const mine = S.me.hood === h.id ? ' (you)' : '';
+    labels += `<text class="lbl${sel ? ' sel' : ''}" x="${h.x}" y="${(h.y + Math.max(outer, 1.5) + 3.4).toFixed(2)}">${esc(h.name + mine)}</text>`;
+    hits += `<circle class="hit" cx="${h.x}" cy="${h.y}" r="${Math.max(outer + 1, 4.5).toFixed(2)}" tabindex="0" role="button" aria-label="${esc(h.name)}" data-act="hood" data-hood="${h.id}"/>`;
+  });
+  const title = { people:'People on THE HUDDLE', have:'What neighbors are offering', need:'What neighbors need', links:'Where needs and offers could connect' }[layer];
+  return `<svg class="map" viewBox="-22 -6 116 132" role="img" aria-label="Schematic map of Seattle neighborhoods: ${esc(title)}">${edges}${links}${dots}${labels}${hits}</svg>`;
+}
+
+function renderNear(){
+  const A = aggregates(UI.mapCat);
+  if (!UI.sel) UI.sel = S.me.hood || 'central';
+  const h = HOOD[UI.sel], a = A[UI.sel];
+  const legend = { people:'One dot is one person.', have:'One dot is one open offer, colored by kind.', need:'One ring is one open need, colored by kind.', links:'Red lines join next-door neighborhoods where a need here matches an offer there. Red dots are matches inside a neighborhood.' }[UI.layer];
+  const nearMatches = [h.id].concat(h.adj).reduce((s, b) => s + pairMatches(A, h.id, b, null), 0);
+  const rows = CATS.map(c => `<tr><td class="name"><span class="sw" style="--c:${c.color}"></span>${esc(c.name)}</td><td class="n">${kCount(a.offers[c.id])}</td><td class="n">${kCount(a.needs[c.id])}</td></tr>`).join('');
+
+  const offers = allOffers(), needs = allNeeds();
+  const byCat = Object.fromEntries(CATS.map(c => [c.id, offers.filter(o => o.cat === c.id).length]));
+  const people = HOODS.reduce((s, x) => s + A[x.id].people, 0);
+  const hud = allHuddles().length;
+
+  $('#panel-near').innerHTML = `
+    <div class="panel-head"><div><h2>Near me</h2><p>A map of what people have and need, not of restaurants and roads.</p></div>${stamp()}</div>
+    <div class="near">
+      <div class="map-box">
+        <div class="map-ctl">
+          <div class="seg" role="group" aria-label="Map layer">
+            ${[['people','People'],['have','What we have'],['need','What we need'],['links','Connections']].map(([k,v]) => `<button type="button" data-act="layer" data-layer="${k}" aria-pressed="${UI.layer === k}">${v}</button>`).join('')}
+          </div>
+          ${catChips('mapcat', UI.mapCat)}
+        </div>
+        ${mapSVG(A)}
+        <p class="map-foot"><span>${esc(legend)}</span><span>Schematic, not to scale. Colors borrowed from the paint code utility crews spray on streets.</span></p>
+      </div>
+      <div class="hood-panel">
+        <h3>${esc(h.name)}</h3>
+        <p class="sub">${kCount(a.people)} ${a.people === 1 ? 'person' : 'people'} on THE HUDDLE here. ${kCount(nearMatches)} possible matches between here and next door right now.</p>
+        <table class="cat-table"><thead><tr><th>Kind</th><th>Offering</th><th>Needing</th></tr></thead><tbody>${rows}</tbody></table>
+        <div class="actions">
+          <button type="button" class="btn btn--sm btn--ink" data-act="see" data-kind="needs" data-hood="${h.id}">See needs here</button>
+          <button type="button" class="btn btn--sm" data-act="see" data-kind="offers" data-hood="${h.id}">See offers here</button>
+          ${S.me.hood ? '' : `<button type="button" class="btn btn--sm btn--red" data-act="find">Set my neighborhood</button>`}
+        </div>
+      </div>
+    </div>
+    <div class="totals">
+      ${offers.length ? `<h3>You were never surrounded by nothing.</h3><p class="after">You were surrounded by uncoordinated people.</p>
+      <ul>${CATS.map(c => `<li><strong>${byCat[c.id].toLocaleString('en-US')}</strong><span>${esc(c.have)}</span></li>`).join('')}
+        <li><strong>${needs.length.toLocaleString('en-US')}</strong><span>open needs</span></li>
+        <li><strong>${people.toLocaleString('en-US')}</strong><span>people across ${HOODS.length} neighborhoods</span></li>
+        <li><strong>${hud}</strong><span>active Huddles</span></li></ul>
+      <p class="fineprint">${S.sim ? 'These totals count simulated posts plus yours, open right now. They show how the map works; they are not measurements of Seattle.' : 'These totals count only your own posts.'}</p>`
+      : `<div class="empty"><p>The map is empty because nobody has posted here yet. The first offer is what makes the second one easier.</p><div class="actions"><button type="button" class="btn btn--red" data-act="offer">Post an offer</button><button type="button" class="btn" data-act="need">Post a need</button></div></div>`}
+    </div>`;
+}
+
+/* ---------- NEEDS / OFFERS ---------- */
+function renderList(kind){
+  const need = kind === 'needs';
+  const scopeKey = need ? 'needScope' : 'offerScope', catKey = need ? 'needCat' : 'offerCat', limKey = need ? 'needLimit' : 'offerLimit';
+  if (!UI[scopeKey]) UI[scopeKey] = defaultScope();
+  const scope = UI[scopeKey], cat = UI[catKey];
+  const all = (need ? allNeeds() : allOffers()).filter(it => inScope(it, scope) && (!cat || it.cat === cat));
+  all.sort((a,b) => (a.sim === b.sim ? 0 : a.sim ? 1 : -1) || ageOf(a) - ageOf(b) || (need ? ['today','week','month'].indexOf(a.soon) - ['today','week','month'].indexOf(b.soon) : 0));
+  const shown = all.slice(0, UI[limKey]);
+
+  let matchBox = '';
+  const mf = UI.matchFor && S.posts.find(p => p.id === UI.matchFor);
+  if (mf && (mf.kind === 'need') === need){
+    const m = matchesFor(mf);
+    matchBox = `<div class="boxed"><div class="boxed-head"><div><h3>${need ? 'Neighbors who could help' : 'Neighbors who need this'}</h3>
+      <p class="sub">For: \u201c${esc(mf.text)}\u201d. Matched by kind, neighborhood, timing, and help history.</p></div>
+      <button type="button" class="btn btn--sm" data-act="close-match">Close</button></div>
+      ${m.length ? `<ul class="posts">${m.map(o => postRow(o, { matchOf:mf.id })).join('')}</ul>`
+        : `<p>No one next door has posted a match yet. Your ${need ? 'need' : 'offer'} stays up for 14 days. Try asking one of your Huddles in the meantime.</p>`}
+    </div>`;
+  }
+
+  const exs = S.exchanges;
+  const exBox = exs.length ? `<div class="boxed"><h3>Your connections</h3><p class="sub">When the help happens, mark it resolved. That's the number THE HUDDLE counts.</p>
+    <ul class="posts">${exs.map(x => { const c = CAT[x.cat]; return `<li class="post" style="--c:${c.color}"><span class="paint" aria-hidden="true"></span>
+      <div><p class="txt">${esc(x.text)}</p><p class="meta"><span>${x.dir === 'giving' ? 'You offered help' : 'You asked for this'}</span><span>With ${esc(x.other)}</span></p>
+      <p class="who"><span class="status${x.status === 'yes' ? ' yes' : ''}">${x.status === 'yes' ? 'They said yes. Agree on a public place to meet.' : 'Waiting for a reply'}</span></p></div>
+      <div class="acts">${x.status === 'yes' ? `<button type="button" class="btn btn--sm btn--red" data-act="resolve" data-id="${x.id}">Mark resolved</button>` : ''}
+      <button type="button" class="btn btn--sm" data-act="cancel-ex" data-id="${x.id}">Cancel</button></div></li>`; }).join('')}</ul></div>` : '';
+
+  const emptyMsg = need
+    ? (S.sim ? 'No open needs match these filters. Try the whole city, or another kind.' : 'No needs posted near you yet. Post one, or turn on simulated neighbors to see how a full board works.')
+    : (S.sim ? 'No open offers match these filters. Try the whole city, or another kind.' : 'No offers posted near you yet. Post the first one, or turn on simulated neighbors to see how a full board works.');
+
+  $('#panel-' + kind).innerHTML = `
+    <div class="panel-head"><div><h2>${need ? 'Needs' : 'Offers'}</h2>
+      <p>${need ? 'What people near you are short on this week. If you can cover one, say so.' : 'What people near you can give, lend, teach, trade, or put in. Ask for what you need.'}</p></div>
+      <div class="actions">${stamp()}<button type="button" class="btn btn--red" data-act="${need ? 'need' : 'offer'}">${need ? 'Post a need' : 'Post an offer'}</button></div></div>
+    ${exBox}${matchBox}
+    <div class="toolbar">
+      <label class="vh" for="scope-${kind}">Where</label>
+      <select class="select" id="scope-${kind}" data-act="scope" data-kind="${kind}">${scopeOptions(scope).map(([v,l]) => `<option value="${v}"${v === scope ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select>
+      ${catChips(need ? 'needcat' : 'offercat', cat)}
+    </div>
+    ${shown.length ? `<ul class="posts">${shown.map(it => postRow(it)).join('')}</ul>
+      ${all.length > shown.length ? `<div class="more-row"><button type="button" class="btn" data-act="more" data-kind="${kind}">Show 20 more of ${all.length.toLocaleString('en-US')}</button></div>` : ''}`
+      : `<div class="empty"><p>${emptyMsg}</p><button type="button" class="btn btn--red" data-act="${need ? 'need' : 'offer'}">${need ? 'Post a need' : 'Post an offer'}</button></div>`}`;
+}
+
+/* ---------- HUDDLES ---------- */
+function huddleMark(size){
+  const n = Math.max(1, Math.min(19, Math.round(Math.sqrt(size) * 1.3)));
+  let s = `<svg class="mark" viewBox="-7 -7 14 14" aria-hidden="true">`;
+  for (let i = 0; i < n; i++){ const r = .95 * Math.sqrt(i + .5), a = i * 2.39996; s += `<circle cx="${(r * Math.cos(a)).toFixed(2)}" cy="${(r * Math.sin(a)).toFixed(2)}" r=".62" fill="${i === 0 ? '#D5001C' : '#000'}"/>`; }
+  return s + `</svg>`;
+}
+function membersOf(hu){ return hu.members + (hu.sim && S.joined.includes(hu.id) ? 1 : 0); }
+function huddleRow(hu){
+  const joined = S.joined.includes(hu.id);
+  const t = HTYPE[hu.type];
+  return `<li>${huddleMark(membersOf(hu))}<div><h3>${esc(hu.name)}</h3><p>${esc(t.about)} ${esc(HOOD[hu.hood].name)}. ${membersOf(hu)} member${membersOf(hu) === 1 ? '' : 's'}${hu.sim ? '' : '. Started by you'}.</p></div>
+    <div class="acts"><button type="button" class="btn btn--sm btn--ink" data-act="open-huddle" data-id="${hu.id}">Open board</button>
+    ${joined ? `<button type="button" class="btn btn--sm" data-act="leave" data-id="${hu.id}"${hu.sim ? '' : ' disabled'}>Leave</button>` : `<button type="button" class="btn btn--sm btn--red" data-act="join" data-id="${hu.id}">Join</button>`}</div></li>`;
+}
+function renderHuddles(){
+  const el = $('#panel-huddles');
+  const open = UI.openHuddle && allHuddles().find(h => h.id === UI.openHuddle);
+  if (open){
+    const joined = S.joined.includes(open.id);
+    const mine = (S.board[open.id] || []).map(p => ({ ...p, mineP:true }));
+    const notes = mine.slice().reverse().concat(open.sim ? open.board.filter(b => !S.blocked.includes(b.author)) : []);
+    const rot = i => ((i * 37) % 7 - 3) * .35;
+    el.innerHTML = `
+      <div class="panel-head"><div><button type="button" class="textlink" data-act="back-huddles">All Huddles</button>
+        <h2 style="margin-top:.6rem">${esc(open.name)}</h2><p>${esc(HTYPE[open.type].about)} ${esc(HOOD[open.hood].name)}. ${membersOf(open)} member${membersOf(open) === 1 ? '' : 's'}.</p></div>
+        <div class="actions">${open.sim ? stamp() : ''}${joined ? `<span class="status yes">You're in this Huddle</span>` : `<button type="button" class="btn btn--red" data-act="join" data-id="${open.id}">Join</button>`}</div></div>
+      <h3 class="sub-h">Board</h3>
+      ${notes.length ? `<div class="board">${notes.map((n, i) => `<div class="note" style="--r:${rot(i)}deg"><p>${esc(n.text)}</p>
+        <small><span>${n.mineP ? esc(n.author) + ' (you)' : esc(n.author)}, ${n.mineP ? (Math.floor((Date.now() - n.created) / DAY) < 1 ? 'today' : Math.floor((Date.now() - n.created) / DAY) + ' days ago') : (n.age === 0 ? 'today' : n.age + ' days ago')}</span>
+        ${n.mineP ? `<button type="button" class="textlink" data-act="unpin" data-hid="${open.id}" data-id="${n.id}">Take down</button>` : `<button type="button" class="textlink" data-act="report" data-person="${esc(n.author)}">Report</button>`}</small></div>`).join('')}</div>`
+        : `<div class="empty" style="margin:1.5rem 0 2rem"><p>Nothing pinned yet. Say what this Huddle should coordinate first.</p></div>`}
+      ${joined ? `<form class="pin-form" id="form-pin" novalidate><div class="field"><label for="pin-text">Pin a note to the board</label>
+        <textarea id="pin-text" maxlength="240" placeholder="Carpool Thursday, 2 seats. Or: who has a ladder?"></textarea></div>
+        <button type="submit" class="btn btn--ink">Pin note</button></form>` : `<p>Join to pin notes to this board.</p>`}`;
+    return;
+  }
+  const hs = allHuddles();
+  const yours = hs.filter(h => S.joined.includes(h.id));
+  const nearby = hs.filter(h => !S.joined.includes(h.id) && (!S.me.hood || isNear(S.me.hood, h.hood)));
+  el.innerHTML = `
+    <div class="panel-head"><div><h2>Huddles</h2><p>Small groups that coordinate one thing well. A building, a block, a shift, a tool shed.</p></div>
+      <div class="actions">${stamp()}<button type="button" class="btn btn--red" data-act="new-huddle">Start a Huddle</button></div></div>
+    <h3 class="sub-h">Your Huddles</h3>
+    ${yours.length ? `<ul class="hl">${yours.map(huddleRow).join('')}</ul>` : `<div class="empty" style="margin-bottom:3rem"><p>You're not in a Huddle yet. Join one nearby or start your own.</p></div>`}
+    <h3 class="sub-h">${S.me.hood ? `Near ${esc(HOOD[S.me.hood].name)}` : 'Across the city'}</h3>
+    ${nearby.length ? `<ul class="hl">${nearby.map(huddleRow).join('')}</ul>` : `<p>No other Huddles nearby yet.</p>`}`;
+}
+
+/* ---------- PROJECTS ---------- */
+function vanSVG(pct){
+  const body = 'M20 150 L20 72 Q20 50 42 50 L248 50 Q272 50 288 68 L336 108 Q380 114 380 140 L380 150 Z';
+  const fillH = 100 * pct;
+  return `<svg class="van" viewBox="0 0 400 200" role="img" aria-label="Line drawing of a van, filled ${Math.round(pct * 100)} percent">
+    <defs><clipPath id="vanclip"><path d="${body}"/></clipPath></defs>
+    <line x1="0" y1="181" x2="400" y2="181" stroke="#000" stroke-width="3" stroke-dasharray="10 7"/>
+    <rect x="0" y="${150 - fillH}" width="400" height="${fillH}" fill="#D5001C" clip-path="url(#vanclip)"/>
+    <path d="${body}" fill="none" stroke="#000" stroke-width="5" stroke-linejoin="round"/>
+    <g fill="${PAPER}" stroke="#000" stroke-width="4"><rect x="44" y="64" width="54" height="36"/><rect x="112" y="64" width="54" height="36"/><rect x="180" y="64" width="50" height="36"/><path d="M244 64 L270 64 L306 104 L244 104 Z"/></g>
+    <line x1="238" y1="58" x2="238" y2="150" stroke="#000" stroke-width="4"/>
+    <g stroke="#000" stroke-width="5" fill="${PAPER}"><circle cx="96" cy="154" r="24"/><circle cx="306" cy="154" r="24"/></g>
+    <g fill="#000"><circle cx="96" cy="154" r="7"/><circle cx="306" cy="154" r="7"/></g>
+  </svg>`;
+}
+function renderProjects(){
+  const P = PROJECT;
+  const mine = S.pledges.reduce((s, p) => s + p.amt, 0);
+  const raised = (S.sim ? P.base : 0) + mine;
+  const pct = Math.min(1, raised / P.goal);
+  $('#panel-projects').innerHTML = `
+    <div class="panel-head"><div><h2>Projects</h2><p>When a Huddle needs something none of its members could buy alone.</p></div>${stamp()}</div>
+    <div class="project">
+      <div>
+        ${vanSVG(pct)}
+        <p class="raised">${whole(raised)} pledged of ${whole(P.goal)}</p>
+        <div class="progress" aria-hidden="true"><span style="width:${(pct * 100).toFixed(1)}%"></span></div>
+        <p>${(S.sim ? P.members : 0) + (mine ? 1 : 0)} members pledging. ${mine ? `You pledged ${whole(mine)}.` : ''}</p>
+        <form class="pledge" id="form-pledge" novalidate>
+          <label class="vh" for="pledge-amt">Pledge amount in dollars</label>
+          <input type="number" id="pledge-amt" min="1" max="1000" step="1" inputmode="numeric" placeholder="$ amount">
+          <button type="submit" class="btn btn--red">Pledge</button>
+        </form>
+        <p class="hint">No real money moves in this prototype. Pledges are only collected once the Huddle picks a van.</p>
+      </div>
+      <div>
+        <h3 class="sub-h">${esc(P.name)}</h3>
+        <p>${esc(P.purpose)} ${esc(P.where)}.</p>
+        <h3 class="sub-h" style="font-size:1.25rem;margin-top:1.75rem">Still needed</h3>
+        <ul class="roles">${P.roles.map((r, i) => {
+          const me = S.roles.includes(i);
+          const by = me ? `${myName()} (you)` : (S.sim ? r.by : null);
+          return `<li><span>${esc(r.name)}</span>${by ? `<span class="filled">${esc(by)}${me ? ` <button type="button" class="textlink" data-act="unrole" data-i="${i}">Step back</button>` : ''}</span>` : `<button type="button" class="btn btn--sm btn--ink" data-act="role" data-i="${i}">I can do this</button>`}</li>`;
+        }).join('')}</ul>
+        ${S.sim ? `<h3 class="sub-h" style="font-size:1.25rem">Updates</h3><ul class="log">${P.log.map(([d,t]) => `<li><time>${esc(d)}</time>${esc(t)}</li>`).join('')}</ul>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ---------- POOLS ---------- */
+function renderPools(){
+  $('#panel-pools').innerHTML = `
+    <div class="panel-head"><div><h2>Pools</h2><p>Small monthly amounts, pooled in the open. Every dollar in and every dollar out is on the receipt.</p></div>${stamp()}</div>
+    <div class="pools">${POOLS.map(p => {
+      const yours = S.poolIn.filter(x => x.pool === p.id);
+      const lines = (S.sim ? p.ledger : []).map(([l, a]) => `<div class="rl"><span>${esc(l)}</span><span>${money(a)}</span></div>`).join('');
+      const mine = yours.map(x => `<div class="rl mine"><span>You, ${new Date(x.created).toLocaleDateString('en-US', { month:'short', day:'numeric' })}</span><span>${money(x.amt)}</span></div>`).join('');
+      const total = (S.sim ? p.ledger.reduce((s, [, a]) => s + a, 0) : 0) + yours.reduce((s, x) => s + x.amt, 0);
+      const c = CAT[p.cat];
+      return `<article class="pool">
+        <h3>${esc(p.name)}</h3>
+        <p class="sub">${esc(p.purpose)}${S.sim ? ` ${p.members + (yours.length ? 1 : 0)} members, ${esc(p.avg)} each on average.` : ''}</p>
+        <div class="receipt" role="group" aria-label="${esc(p.name)} ledger">
+          <div class="rh">${esc(p.name.toUpperCase())}<br>OPEN LEDGER</div><hr>
+          ${lines}${mine}${!lines && !mine ? '<div class="rl"><span>No entries yet</span><span>$0.00</span></div>' : ''}
+          <hr><div class="rl tot"><span>Balance</span><span>${money(total)}</span></div>
+          <div class="fine">Two stewards approve each payout.<br>Every receipt is posted here.</div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn btn--sm btn--red" data-act="pool-add" data-pool="${p.id}">Add $5</button>
+          <button type="button" class="btn btn--sm" data-act="pool-ask" data-pool="${p.id}" style="--c:${c.color}">Ask this pool for help</button>
+        </div>
+      </article>`;
+    }).join('')}</div>
+    <p class="fineprint">No real money moves in this prototype. A working version would need a licensed payment partner or an open-ledger service, plus legal review, before holding anyone's money.</p>`;
+}
+
+/* ---------- header + tabs ---------- */
+function renderHeader(){
+  const n = (S.sim ? SIM.resolvedBase : 0) + S.resolved;
+  $('#northstar').innerHTML = `<strong>${n.toLocaleString('en-US')}</strong><span>needs resolved<small>${S.sim ? 'last 30 days, simulated plus yours' : 'by you'}</small></span>`;
+  $('#sim-toggle').checked = S.sim;
+  document.body.classList.toggle('no-sim', !S.sim);
+  $$('.line button').forEach(b => b.setAttribute('aria-current', String(b.dataset.tab === UI.tab)));
+}
+function render(){
+  renderHeader();
+  $$('.panel').forEach(p => { p.hidden = p.id !== 'panel-' + UI.tab; });
+  ({ near:renderNear, needs:() => renderList('needs'), offers:() => renderList('offers'), huddles:renderHuddles, projects:renderProjects, pools:renderPools })[UI.tab]();
+}
+function goTab(tab, scroll = true){
+  UI.tab = tab; render();
+  if (scroll) document.getElementById('app').scrollIntoView({ behavior:REDUCED ? 'auto' : 'smooth', block:'start' });
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const act = t.dataset.act;
+  if (t.tagName === 'SELECT') return;
+  const d = t.dataset;
+  switch (act){
+    case 'tab': if (d.tab === 'huddles') UI.openHuddle = null; goTab(d.tab); break;
+    case 'need': openPost('need'); break;
+    case 'offer': openPost('offer'); break;
+    case 'find': requireHood(() => { UI.sel = S.me.hood; UI.layer = 'have'; goTab('near'); }); break;
+    case 'layer': UI.layer = d.layer; render(); break;
+    case 'mapcat': UI.mapCat = d.cat || null; render(); break;
+    case 'hood': UI.sel = d.hood; render(); break;
+    case 'see': {
+      const k = d.kind; UI[k === 'needs' ? 'needScope' : 'offerScope'] = `hood:${d.hood}`; UI[k === 'needs' ? 'needLimit' : 'offerLimit'] = 20; goTab(k); break; }
+    case 'needcat': UI.needCat = d.cat || null; UI.needLimit = 20; render(); break;
+    case 'offercat': UI.offerCat = d.cat || null; UI.offerLimit = 20; render(); break;
+    case 'more': UI[d.kind === 'needs' ? 'needLimit' : 'offerLimit'] += 20; render(); break;
+    case 'connect': { const it = findItem(d.id); if (it) connect(it, d.mine || null); break; }
+    case 'matches': UI.matchFor = d.id; render(); document.getElementById('app').scrollIntoView({ behavior:REDUCED ? 'auto' : 'smooth' }); break;
+    case 'close-match': UI.matchFor = null; render(); break;
+    case 'remove': {
+      const idx = S.posts.findIndex(p => p.id === d.id); if (idx < 0) break;
+      const [gone] = S.posts.splice(idx, 1); if (UI.matchFor === gone.id) UI.matchFor = null; save(); render();
+      toast('Post taken down.', { label:'Undo', run:() => { S.posts.splice(idx, 0, gone); save(); render(); } });
+      break; }
+    case 'resolve': resolveExchange(d.id); break;
+    case 'cancel-ex': S.exchanges = S.exchanges.filter(x => x.id !== d.id); save(); render(); toast('Connection canceled.'); break;
+    case 'report':
+      UI.reportPerson = d.person; $('#rep-sub').textContent = `About ${d.person}.`; closeMenus(); openDlg('dlg-report'); break;
+    case 'block': {
+      const p = d.person; if (!S.blocked.includes(p)) S.blocked.push(p);
+      S.exchanges = S.exchanges.filter(x => x.other !== p); closeMenus(); save(); render();
+      toast(`Blocked ${p}. You won't see their posts.`, { label:'Undo', run:() => { S.blocked = S.blocked.filter(x => x !== p); save(); render(); } });
+      break; }
+    case 'open-huddle': UI.openHuddle = d.id; render(); document.getElementById('app').scrollIntoView({ behavior:REDUCED ? 'auto' : 'smooth' }); break;
+    case 'back-huddles': UI.openHuddle = null; render(); break;
+    case 'join': requireHood(() => { if (!S.joined.includes(d.id)) S.joined.push(d.id); save(); render(); toast('Joined. You can pin notes to the board now.'); }); break;
+    case 'leave': S.joined = S.joined.filter(x => x !== d.id); save(); render(); break;
+    case 'new-huddle': requireHood(() => {
+      $('#hud-types').innerHTML = HTYPES.map((t, i) => `<label><input type="radio" name="hud-type" value="${t.id}"${i === 5 ? ' checked' : ''}><span>${esc(t.name)}</span></label>`).join('');
+      $('#hud-name').value = ''; $('#hud-err').hidden = true; hoodSelect($('#hud-hood'), S.me.hood); openDlg('dlg-huddle'); }); break;
+    case 'unpin': S.board[d.hid] = (S.board[d.hid] || []).filter(n => n.id !== d.id); save(); render(); break;
+    case 'role': requireHood(() => { const i = +d.i; if (!S.roles.includes(i)) S.roles.push(i); save(); render(); toast('You\u2019re on it. The project Huddle can see you signed up.'); }); break;
+    case 'unrole': S.roles = S.roles.filter(i => i !== +d.i); save(); render(); break;
+    case 'pool-add': requireHood(() => { S.poolIn.push({ pool:d.pool, amt:5, created:Date.now() }); save(); render(); toast('Added $5 to the ledger. No real money moved.'); }); break;
+    case 'pool-ask': { const p = POOLS.find(x => x.id === d.pool); openPost('need', { cat:p.cat === 'care' ? 'care' : p.cat, text:`Asking the ${p.name.toLowerCase()} for help with ` }); break; }
+    case 'dlg-close': closeDlg(t.closest('dialog')); break;
+  }
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('hit')){
+    e.preventDefault(); UI.sel = e.target.dataset.hood; render();
+    const el = $(`.hit[data-hood="${UI.sel}"]`); if (el) el.focus();
+  }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id === 'sim-toggle'){ S.sim = t.checked; save(); render(); toast(S.sim ? 'Showing simulated neighbors.' : 'Showing only your own posts.'); }
+  if (t.dataset && t.dataset.act === 'scope'){ UI[t.dataset.kind === 'needs' ? 'needScope' : 'offerScope'] = t.value; UI[t.dataset.kind === 'needs' ? 'needLimit' : 'offerLimit'] = 20; render(); }
+});
+function closeMenus(){ $$('details.more[open]').forEach(x => x.removeAttribute('open')); }
+document.addEventListener('toggle', e => {
+  if (e.target.matches && e.target.matches('details.more') && e.target.open) $$('details.more[open]').forEach(x => { if (x !== e.target) x.removeAttribute('open'); });
+}, true);
+document.addEventListener('click', e => { if (!e.target.closest('details.more')) closeMenus(); });
+
+document.addEventListener('submit', e => {
+  const f = e.target;
+  e.preventDefault();
+  if (f.id === 'form-onboard'){
+    const hood = (f.querySelector('input[name="ob-hood"]:checked') || {}).value;
+    if (!hood){ $('#ob-err').hidden = false; return; }
+    S.me = { name:$('#ob-name').value.trim().slice(0, 32), hood, onboarded:true };
+    UI.sel = hood; UI.needScope = UI.offerScope = `near:${hood}`;
+    const then = UI.afterOnboard; UI.afterOnboard = null;
+    save(); closeDlg(f.closest('dialog')); render();
+    if (then) then();
+  }
+  if (f.id === 'form-post'){
+    const text = $('#post-text').value.trim();
+    if (text.length < 4){ $('#post-err').hidden = false; $('#post-text').focus(); return; }
+    const kind = UI.postKind;
+    const cat = (f.querySelector('input[name="post-cat"]:checked') || {}).value || 'rides';
+    const mode = (f.querySelector('input[name="post-mode"]:checked') || {}).value;
+    const post = { id:uid('p'), kind, cat, text:text.slice(0, 200), hood:$('#post-hood').value, vis:$('#post-vis').value, anon:$('#post-anon').checked, created:Date.now(), sim:false };
+    if (kind === 'need') post.soon = mode || 'week'; else post.mode = mode || 'help';
+    S.posts.unshift(post); UI.matchFor = post.id;
+    save(); closeDlg(f.closest('dialog'));
+    toast(kind === 'need' ? 'Need posted.' : 'Offer posted.');
+    goTab(kind === 'need' ? 'needs' : 'offers');
+  }
+  if (f.id === 'form-huddle'){
+    const name = $('#hud-name').value.trim();
+    if (name.length < 2){ $('#hud-err').hidden = false; $('#hud-name').focus(); return; }
+    const type = (f.querySelector('input[name="hud-type"]:checked') || {}).value || 'ride';
+    const hu = { id:uid('uh'), type, name:name.slice(0, 48), hood:$('#hud-hood').value, members:1, sim:false, board:[] };
+    S.myHuddles.unshift(hu); S.joined.push(hu.id); UI.openHuddle = hu.id;
+    save(); closeDlg(f.closest('dialog')); render(); toast('Huddle started. Pin the first note.');
+  }
+  if (f.id === 'form-report'){
+    if (UI.reportPerson && !S.reported.includes(UI.reportPerson)) S.reported.push(UI.reportPerson);
+    save(); closeDlg(f.closest('dialog'));
+    toast('Report sent to Huddle stewards.', { label:`Block ${UI.reportPerson}`, run:() => { if (!S.blocked.includes(UI.reportPerson)) S.blocked.push(UI.reportPerson); save(); render(); } });
+  }
+  if (f.id === 'form-pin'){
+    const text = $('#pin-text').value.trim(); if (text.length < 2) return;
+    const hid = UI.openHuddle;
+    (S.board[hid] = S.board[hid] || []).push({ id:uid('n'), text:text.slice(0, 240), author:myName(), created:Date.now() });
+    save(); render(); toast('Pinned.');
+  }
+  if (f.id === 'form-pledge'){
+    const v = Math.round(Number($('#pledge-amt').value));
+    if (!v || v < 1 || v > 1000){ toast('Enter a pledge between $1 and $1,000.'); return; }
+    requireHood(() => { S.pledges.push({ amt:v, created:Date.now() }); save(); render(); toast(`Pledged ${whole(v)}. No real money moved.`); });
+  }
+});
+
+/* =====================================================================
+   HERO FIELD: dots appear, then a few neighbors connect. One moment, then still.
+   ===================================================================== */
+function heroField(){
+  const cv = $('#hero-canvas'), ctx = cv.getContext('2d');
+  let W, H, dpr, dots = [], links = [], start = 0, raf = 0;
+  function build(){
+    const b = cv.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = b.width; H = b.height; cv.width = W * dpr; cv.height = H * dpr;
+    const copy = $('#hero-copy').getBoundingClientRect(), hero = cv.getBoundingClientRect();
+    const av = { x0:copy.left - hero.left - 10, y0:copy.top - hero.top + 10, x1:copy.left - hero.left + Math.min(copy.width, 760), y1:H };
+    const gap = W < 600 ? 17 : 21, r = rng(42);
+    dots = [];
+    for (let y = gap * .7; y < H; y += gap) for (let x = gap * .7; x < W; x += gap){
+      const px = x + (r() - .5) * gap * .7, py = y + (r() - .5) * gap * .7;
+      if (px > av.x0 && px < av.x1 && py > av.y0 && py < av.y1) continue;
+      dots.push({ x:px, y:py, t:r(), big:false });
+    }
+    links = [];
+    const cand = dots.filter(dd => dd.y < av.y0 - 20 || dd.x > av.x1 + 20);
+    const nl = Math.min(46, Math.floor(cand.length / 30));
+    for (let i = 0; i < nl; i++){
+      const a = cand[Math.floor(r() * cand.length)];
+      let best = null, bd = 1e9;
+      for (let k = 0; k < 40; k++){
+        const b2 = cand[Math.floor(r() * cand.length)], dist = Math.hypot(a.x - b2.x, a.y - b2.y);
+        if (dist > gap * 2.5 && dist < gap * 7 && dist < bd){ best = b2; bd = dist; }
+      }
+      if (best){ a.big = best.big = true; links.push([a, best, .9 + r() * 2.2]); }
+    }
+  }
+  function frame(now){
+    if (!start) start = now;
+    const t = REDUCED ? 99 : (now - start) / 1000;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineCap = 'round';
+    links.forEach(([a, b, at]) => {
+      const p = Math.max(0, Math.min(1, (t - at) / .9)); if (!p) return;
+      ctx.strokeStyle = '#D5001C'; ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p); ctx.stroke();
+    });
+    dots.forEach(dd => {
+      const p = Math.max(0, Math.min(1, (t - dd.t * .9) / .35)); if (!p) return;
+      const linked = dd.big && t > 1;
+      ctx.fillStyle = linked ? '#D5001C' : '#000';
+      ctx.beginPath(); ctx.arc(dd.x, dd.y, (linked ? 3.6 : 2.1) * p, 0, Math.PI * 2); ctx.fill();
+    });
+    if (t < 3.6) raf = requestAnimationFrame(frame);
+  }
+  build(); raf = requestAnimationFrame(frame);
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { cancelAnimationFrame(raf); build(); start = performance.now() - 5000; raf = requestAnimationFrame(frame); }, 150); });
+}
+
+/* =====================================================================
+   STORY FIELD: one set of dots moves through seven scenes as you scroll.
+   ===================================================================== */
+const LANES = ['Black', 'Latino', 'Native', 'Asian', 'Pacific Islander', 'White working class', 'Immigrant', 'Mixed'];
+const PRESSURES = ['Rent', 'Food', 'Health', 'Time', 'Debt', 'Childcare', 'Transportation', 'Work'];
+const INSTITUTIONS = ['Landlords', 'Banks', 'Insurers', 'Utilities', 'Big retailers', 'Lenders', 'Health systems', 'Platforms'];
+
+function storyField(){
+  const cv = $('#story-canvas'), ctx = cv.getContext('2d');
+  const N = window.innerWidth < 700 ? 440 : 760;
+  const r = rng(7);
+  const P = [];
+  const order = Array.from({ length:N }, (_, i) => i).sort(() => r() - .5);
+  for (let i = 0; i < N; i++){
+    P.push({ i, g:i % 8, pr:Math.floor(r() * 8), inst:Math.floor(r() * 8), u:r(), v:r(), sp:.6 + r() * .8, k:order[i],
+      cap:r() < .3 ? Math.floor(r() * 8) : -1, need:r() < .19 ? Math.floor(r() * 8) : -1, x:0, y:0, a:1, cyc:null, sc:-1, init:false });
+  }
+  let W = 0, H = 0, dpr = 1, R, scene = 0, sceneT = 0, links = [], visible = false, raf = 0, last = 0, clock = 0;
+
+  function rect(){ return W >= 900 ? { x0:W * .45, x1:W - 40, y0:64, y1:H - 70 } : { x0:18, x1:W - 18, y0:52, y1:Math.max(260, H * .52) }; }
+  function layout(){
+    const b = cv.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = b.width; H = b.height; cv.width = W * dpr; cv.height = H * dpr; R = rect();
+    const rw = R.x1 - R.x0, rh = R.y1 - R.y0;
+    const cols = Math.max(4, Math.round(Math.sqrt(N * rw / rh))), rows = Math.ceil(N / cols);
+    const cw = rw / cols, ch = rh / rows, jr = rng(11);
+    P.forEach(p => { const c = p.k % cols, rr = Math.floor(p.k / cols); p.sx = R.x0 + (c + .5 + (jr() - .5) * .8) * cw; p.sy = R.y0 + (rr + .5 + (jr() - .5) * .8) * ch; });
+    links = [];
+    P.forEach(p => {
+      if (p.need < 0) return;
+      let best = null, bd = 1e9;
+      P.forEach(q => { if (q === p || q.cap !== p.need) return; const dd = (p.sx - q.sx) ** 2 + (p.sy - q.sy) ** 2; if (dd < bd){ bd = dd; best = q; } });
+      if (best) links.push([p, best]);
+    });
+  }
+
+  function instPos(k){
+    const wide = (R.x1 - R.x0) >= 640, cols = wide ? 8 : 4, row = wide ? 0 : Math.floor(k / 4), col = wide ? k : k % 4;
+    const cw = (R.x1 - R.x0) / cols;
+    return { x:R.x0 + cw * (col + .5), y:R.y1 - (wide ? 18 : (row === 0 ? 62 : 18)), w:cw };
+  }
+  function bez(t, a, b, c, d){ const m = 1 - t; return m * m * m * a + 3 * m * m * t * b + 3 * m * t * t * c + t * t * t * d; }
+
+  function target(p, sc, t){
+    const rw = R.x1 - R.x0, rh = R.y1 - R.y0;
+    switch (sc){
+      case 0: {
+        const lw = rw / 8, s = p.v + t * .025 * p.sp, cyc = Math.floor(s), f = s - cyc;
+        return { x:R.x0 + lw * (p.g + .62) + (p.u - .5) * lw * .3, y:R.y0 + 14 + f * (rh - 14), a:Math.min(1, f * 8, (1 - f) * 8), cyc };
+      }
+      case 1: {
+        const cw = rw / 4, ch = rh / 2, cx = R.x0 + cw * (p.pr % 4 + .5), cy = R.y0 + ch * (Math.floor(p.pr / 4) + .42);
+        const rad = Math.min(cw, ch) * .36 * Math.sqrt(p.v), an = p.u * 6.2832 + t * .12 * (p.sp - 1.1);
+        return { x:cx + rad * Math.cos(an), y:cy + rad * Math.sin(an), a:1, cyc:0 };
+      }
+      case 2: {
+        const hx = R.x0 + p.u * rw, hy = R.y0 + p.v * rh * .14, ip = instPos(p.inst), ix = ip.x + (p.v - .5) * ip.w * .5, iy = ip.y - 12;
+        const s = p.v * 3 + t * .1 * p.sp, cyc = Math.floor(s), f = s - cyc;
+        return { x:bez(f, hx, hx, ix, ix), y:bez(f, hy, hy + (iy - hy) * .6, iy - (iy - hy) * .6, iy), a:Math.min(1, f * 6, (1 - f) * 10), cyc };
+      }
+      case 3: {
+        const g = p.g % 3, cx = R.x0 + rw * (g * 2 + 1) / 6, cy = R.y0 + rh * .26, cr = Math.min(rw / 6, rh * .18) * .78;
+        const an = p.u * 6.2832 + t * .08, rad = cr * Math.sqrt(p.v), sx = cx + rad * Math.cos(an), sy = cy + rad * Math.sin(an);
+        if (p.u < .42){
+          const ex = R.x0 + rw * .5 + (p.u / .42 - .5) * rw * .5, ey = R.y1 - 34;
+          const s = p.v * 2 + t * .11 * p.sp, cyc = Math.floor(s), f = s - cyc;
+          return { x:bez(f, sx, sx, ex, ex), y:bez(f, sy, sy + (ey - sy) * .6, ey - (ey - sy) * .5, ey), a:Math.min(1, (1 - f) * 10), cyc };
+        }
+        return { x:sx, y:sy, a:1, cyc:0 };
+      }
+      default: {
+        const wob = REDUCED ? 0 : Math.sin(t * .8 + p.u * 6) * 1.2;
+        return { x:p.sx + wob, y:p.sy + Math.cos(t * .7 + p.v * 6) * 1.2, a:1, cyc:0 };
+      }
+    }
+  }
+
+  function text(str, x, y, opt = {}){
+    ctx.font = `${opt.w || 700} ${opt.s || 13}px "Helvetica Neue", Helvetica, Arial, sans-serif`;
+    ctx.textAlign = opt.al || 'center'; ctx.textBaseline = opt.bl || 'alphabetic';
+    if (opt.halo){ ctx.lineWidth = 4; ctx.strokeStyle = PAPER; ctx.lineJoin = 'round'; ctx.strokeText(str, x, y); }
+    ctx.fillStyle = opt.c || '#000'; ctx.fillText(str, x, y);
+  }
+  function arrow(x1, y1, x2, y2, col, both){
+    const hd = 7, an = Math.atan2(y2 - y1, x2 - x1);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    const head = (x, y, a) => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - hd * Math.cos(a - .5), y - hd * Math.sin(a - .5)); ctx.lineTo(x - hd * Math.cos(a + .5), y - hd * Math.sin(a + .5)); ctx.closePath(); ctx.fill(); };
+    head(x2, y2, an); if (both) head(x1, y1, an + Math.PI);
+  }
+
+  function overlay(sc, t, al){
+    ctx.globalAlpha = al;
+    const rw = R.x1 - R.x0, rh = R.y1 - R.y0;
+    if (sc === 0){
+      const lw = rw / 8, fs = W < 600 ? 11 : 13;
+      LANES.forEach((l, i) => { ctx.save(); ctx.translate(R.x0 + lw * (i + .2), R.y1); ctx.rotate(-Math.PI / 2); text(l, 0, 0, { al:'left', bl:'middle', s:fs, halo:true }); ctx.restore(); });
+    } else if (sc === 1){
+      const cw = rw / 4, ch = rh / 2, fs = W < 600 ? 12 : 15;
+      PRESSURES.forEach((l, i) => { const cx = R.x0 + cw * (i % 4 + .5), cy = R.y0 + ch * (Math.floor(i / 4) + .42) + Math.min(cw, ch) * .36 + (W < 600 ? 16 : 22); text(l, cx, cy, { s:fs, w:800, halo:true }); });
+    } else if (sc === 2){
+      text('Households', R.x0, R.y0 - 14, { al:'left', s:13, halo:true });
+      const fs = W < 600 ? 11 : 12;
+      INSTITUTIONS.forEach((l, i) => { const ip = instPos(i); ctx.globalAlpha = al; ctx.fillStyle = '#000'; ctx.fillRect(ip.x - ip.w * .34, ip.y - 10, ip.w * .68, 5); text(l, ip.x, ip.y + 8, { s:fs, halo:true, bl:'middle' }); });
+    } else if (sc === 3){
+      const cy = R.y0 + rh * .26, cr = Math.min(rw / 6, rh * .18) * .78, wob = REDUCED ? 0 : Math.sin(t * 3.2) * 4;
+      for (let g = 0; g < 2; g++){
+        const xa = R.x0 + rw * (g * 2 + 1) / 6 + cr + 8, xb = R.x0 + rw * (g * 2 + 3) / 6 - cr - 8;
+        if (xb - xa > 18) arrow(xa, cy + wob * (g ? -1 : 1), xb, cy - wob * (g ? -1 : 1), '#D5001C', true);
+      }
+      ['rent, debt, fees', 'rent, debt, fees', 'rent, debt, fees'].forEach((l, g) => text(l, R.x0 + rw * (g * 2 + 1) / 6, cy + cr + 20, { s:W < 600 ? 10 : 12, halo:true, c:'#55544F' }));
+      ctx.fillStyle = '#000'; ctx.fillRect(R.x0 + rw * .22, R.y1 - 30, rw * .56, 6);
+      text('Money leaving all three', R.x0 + rw * .5, R.y1 - 8, { s:13, halo:true });
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(now){
+    const dt = Math.min(.05, last ? (now - last) / 1000 : .016); last = now;
+    clock += REDUCED ? 0 : dt; sceneT += dt;
+    const ease = REDUCED ? 1 : 1 - Math.pow(1 - .08, dt * 60);
+    const trails = !REDUCED && (scene === 0 || scene === 2 || scene === 3) && sceneT > .8;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (trails){ ctx.fillStyle = 'rgba(236,235,230,.34)'; ctx.fillRect(0, 0, W, H); } else { ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H); }
+
+    const la = Math.min(1, sceneT / (REDUCED ? .01 : .9));
+    if (scene === 6){
+      const prog = REDUCED ? 1 : Math.min(1, Math.max(0, (sceneT - .3) / 1.6));
+      ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+      links.forEach(([p, q], i) => {
+        const pp = Math.min(1, Math.max(0, prog * 1.6 - (i / links.length) * .6)); if (!pp) return;
+        ctx.strokeStyle = CATS[p.need].color; ctx.globalAlpha = .9;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + (q.x - p.x) * pp, p.y + (q.y - p.y) * pp); ctx.stroke();
+      });
+      ctx.globalAlpha = 1;
+    }
+    P.forEach(p => {
+      const tg = target(p, scene, clock);
+      if (!p.init){ p.x = tg.x; p.y = tg.y; p.init = true; }
+      if (p.sc === scene && p.cyc !== null && tg.cyc !== p.cyc){ p.x = tg.x; p.y = tg.y; }
+      p.cyc = tg.cyc; p.sc = scene;
+      p.x += (tg.x - p.x) * ease; p.y += (tg.y - p.y) * ease; p.a += (tg.a - p.a) * Math.min(1, ease * 2);
+      let rad = 1.7, col = '#000', ring = null;
+      if (scene >= 4){
+        if (p.cap >= 0){ rad = 1.7 + 1.9 * (scene === 4 ? la : 1); col = CATS[p.cap].color; if (scene === 5) ctx.globalAlpha = .45; }
+        if (scene >= 5 && p.need >= 0) ring = CATS[p.need].color;
+      }
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.a)) * (scene === 5 && p.cap >= 0 ? .45 : 1);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(p.x, p.y, rad, 0, 6.2832); ctx.fill();
+      if (ring){
+        ctx.globalAlpha = scene === 5 ? la : 1; ctx.strokeStyle = ring; ctx.lineWidth = 2; ctx.fillStyle = PAPER;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4.6, 0, 6.2832); ctx.fill(); ctx.stroke();
+      }
+    });
+    ctx.globalAlpha = 1;
+    if (scene <= 3) overlay(scene, clock, la);
+    if (visible) raf = requestAnimationFrame(frame);
+  }
+
+  function setScene(s){ if (s === scene) return; scene = s; sceneT = 0; }
+  function start(){ if (!raf){ last = 0; raf = requestAnimationFrame(frame); } }
+  function stop(){ cancelAnimationFrame(raf); raf = 0; }
+
+  layout();
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) start(); else stop(); }, { threshold:0 }).observe($('#story'));
+  const steps = $$('.step');
+  let ticking = false;
+  function pickScene(){
+    ticking = false;
+    const mid = window.innerHeight * .55; let best = 0, bd = 1e9;
+    steps.forEach(st => { const b = st.getBoundingClientRect(), c = b.top + b.height / 2, dd = Math.abs(c - mid); if (dd < bd){ bd = dd; best = +st.dataset.scene; } });
+    setScene(best);
+  }
+  window.addEventListener('scroll', () => { if (!ticking){ ticking = true; requestAnimationFrame(pickScene); } }, { passive:true });
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { layout(); P.forEach(p => { p.init = false; }); }, 150); });
+  pickScene();
+}
+
+/* ---------- archive (renders only with real sourced photos) ---------- */
+function renderArchive(){
+  if (!ARCHIVE.length) return;
+  const el = $('#archive');
+  el.innerHTML = ARCHIVE.map(a => `<figure><img src="${esc(a.src)}" alt="${esc(a.alt)}" loading="lazy" onerror="this.closest('figure').remove()"><figcaption>${esc(a.place)}, ${esc(a.year)} · ${esc(a.credit)}</figcaption></figure>`).join('');
+  el.hidden = false;
+}
+
+function setTopH(){ document.documentElement.style.setProperty('--top-h', $('#top-bar').offsetHeight + 'px'); }
+
+/* ---------- boot ---------- */
+async function boot(){
+  setTopH(); window.addEventListener('resize', setTopH);
+  $('#dlg-onboard').addEventListener('close', () => { UI.afterOnboard = null; });
+  $('#story-key').innerHTML = CATS.map(c => `<li><i style="--c:${c.color}"></i>${esc(c.name)}</li>`).join('');
+  renderArchive();
+  await load();
+  UI.sel = S.me.hood || 'central';
+  render();
+  heroField();
+  storyField();
+}
+boot();
+})();
+
+</script>
+</body>
+</html>
